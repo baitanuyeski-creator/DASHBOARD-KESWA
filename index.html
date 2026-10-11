@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#087e83">
+<title>Dashboard Kesehatan Jiwa | Puskesmas Naibonat</title>
+<style>
+:root{
+ --teal:#087e83;--deep:#064c63;--cyan:#12a9ba;
+ --mint:#d8f7ed;--blue:#147fe5;--yellow:#ffd33d;
+ --red:#ed4552;--green:#42b84a;--ink:#092e49;
+ --muted:#607c8b;--line:#cce8ec;--paper:#f1fbfc;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+ font-family:Arial,Helvetica,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+header.hero{
+ position:relative;overflow:hidden;color:white;
+ padding:26px clamp(18px,4vw,55px);
+ background:linear-gradient(115deg,#075d70,#087f91 55%,#13a7a7);
+}
+.hero:after{content:"";position:absolute;width:370px;height:370px;
+ right:-60px;top:-180px;border:28px solid #ffffff18;border-radius:50%}
+.hero-inner{position:relative;z-index:1;display:flex;align-items:center;
+ justify-content:space-between;gap:20px;max-width:1600px;margin:auto}
+.brand{display:flex;align-items:center;gap:20px}
+.logo{width:82px;height:82px;flex-shrink:0;border:3px solid white;
+ border-radius:22px;display:grid;place-items:center;font-size:39px}
+h1{font-size:clamp(23px,3.5vw,48px);line-height:1.03;margin:0;
+ letter-spacing:-1px}
+.hero h2{font-size:clamp(16px,2vw,26px);color:#ffdf72;margin:8px 0}
+.byline{font-size:13px;letter-spacing:.3px}
+.hero-side{max-width:180px;border-left:2px solid #ffdc6d;
+ padding-left:15px;font-size:11px;letter-spacing:2px;line-height:1.8}
+.toolbar{max-width:1600px;margin:auto;padding:13px 20px 0}
+.months{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));
+ gap:6px;padding:9px;background:white;border:1px solid var(--line);
+ border-radius:15px;box-shadow:0 3px 14px #075d7010}
+.month{border:1px solid #d7e8ed;background:#f6fbfc;color:var(--ink);
+ border-radius:9px;padding:11px 2px;font-size:11px;font-weight:800}
+.month.active{background:var(--teal);color:white;border:3px solid var(--yellow);
+ box-shadow:0 3px 9px #087e8330}
+.actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;
+ margin:12px 0}
+.btn{border:0;border-radius:9px;padding:11px 15px;font-weight:700;font-size:12px}
+.primary{background:var(--teal);color:white}
+.secondary{background:white;border:1px solid var(--line);color:var(--ink)}
+.warning{background:#fff1cf;color:#745300}
+.danger{background:#ffe4e4;color:#a02030}
+main{max-width:1600px;margin:auto;padding:8px 20px 22px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.panel{background:white;border:1px solid var(--line);border-radius:18px;
+ overflow:hidden;box-shadow:0 5px 20px #087e830c;min-width:0}
+.panel-head{display:flex;align-items:center;gap:12px;padding:14px;
+ min-height:82px}
+.head-mint{background:linear-gradient(110deg,#d5f7e7,#e7fff6)}
+.head-cream{background:linear-gradient(110deg,#fff1ce,#fff9e9)}
+.head-blue{background:linear-gradient(110deg,#d6f4fc,#e7faff)}
+.head-white{background:linear-gradient(110deg,#e0f8fa,#f3ffff)}
+.head-red{background:linear-gradient(110deg,#ffdad7,#fff0ec)}
+.head-teal{background:linear-gradient(110deg,#c8f5eb,#e3fffa)}
+.icon{width:56px;height:56px;border-radius:50%;display:grid;
+ place-items:center;color:white;font-size:25px;flex-shrink:0}
+.i-teal{background:linear-gradient(140deg,#12a89b,#08766f)}
+.i-blue{background:linear-gradient(140deg,#19b8cb,#075b7a)}
+.i-red{background:#ef514c}
+.panel-head h3{font-size:clamp(14px,1.5vw,21px);margin:0;
+ font-weight:900;line-height:1.2}
+.panel-body{padding:12px}
+.legend{display:flex;gap:11px;flex-wrap:wrap;justify-content:center;
+ font-size:11px;margin:2px 0 14px}
+.legend span{display:flex;align-items:center;gap:5px}
+.dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+.chart{height:215px;display:flex;align-items:stretch;gap:8px;
+ padding:7px 0 0}
+.chart-y{display:flex;flex-direction:column;justify-content:space-between;
+ color:#37576b;font-size:10px;padding-bottom:25px}
+.chart-cols{display:flex;flex:1;min-width:0;position:relative;
+ justify-content:space-around;align-items:stretch;
+ background:repeating-linear-gradient(to bottom,#dce9ed 0,#dce9ed 1px,transparent 1px,transparent 20%);
+ border-bottom:1px solid #9cb8c5}
+.bar-col{flex:1;max-width:110px;display:flex;align-items:center;
+ justify-content:flex-end;flex-direction:column;min-width:0;z-index:1}
+.bar-val{font-size:clamp(10px,1.2vw,15px);font-weight:900;
+ margin-bottom:5px;white-space:nowrap;color:#111b2c}
+.bar{width:58%;max-width:52px;min-width:12px;border-radius:5px 5px 0 0;
+ min-height:2px;transition:height .25s}
+.yellow{background:linear-gradient(#ffdf55,#ffbf24)}
+.green{background:linear-gradient(#5ec85b,#37ae40)}
+.blue{background:linear-gradient(#3aa5ff,#1477e5)}
+.red{background:linear-gradient(#fa5865,#d91d39)}
+.x-label{font-size:9px;text-align:center;line-height:1.4;
+ padding:7px 1px 0;min-height:31px;overflow-wrap:anywhere}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:4px;margin-top:13px}
+.metric{text-align:center;border-radius:9px;padding:10px 3px;min-width:0}
+.metric strong{display:block;font-size:clamp(14px,1.6vw,22px);
+ overflow-wrap:anywhere}
+.metric span{display:block;font-size:11px;margin-top:5px;line-height:1.4}
+.m-yellow{background:#fff2bf}.m-green{background:#d6f8e7}
+.m-blue{background:#d8ecff}.m-red{background:#ffe0de}
+.linechart{height:220px;width:100%;display:block}
+.info-banner{border-radius:11px;text-align:center;background:#ffcf36;
+ padding:12px 6px;font-weight:900;font-size:clamp(14px,1.7vw,21px);
+ margin-bottom:9px}
+.info-row{display:flex;align-items:center;gap:10px;padding:11px;
+ border-radius:10px;background:#fff4d8;font-size:13px;line-height:1.7}
+.info-symbol{font-size:22px}
+.info-section{margin-top:16px;padding:12px 4px;border-top:1px dashed #b5c6cb}
+.info-section h4{margin:0 0 8px;font-size:14px}
+.small-line{font-size:13px;font-weight:700;padding:4px 0}
+.lower{margin-top:13px}
+.issue,.solution{display:flex;align-items:center;gap:11px;padding:12px;
+ border-radius:11px;margin-bottom:8px;font-size:12px;font-weight:700;
+ line-height:1.5}
+.issue{background:#ffedeb}
+.solution{background:#d9faf5}
+.number{width:34px;height:34px;border-radius:50%;display:grid;
+ place-items:center;flex-shrink:0;background:#ffb3b0;font-size:17px}
+.solution .number{background:#62dfd1}
+.region-wrap{margin-top:14px;padding:14px;border-radius:17px;
+ background:linear-gradient(120deg,#b8edf0,#e1fbfa);border:1px solid #8ddbe3}
+.region-heading{font-size:17px;font-weight:900;margin:3px 0 13px}
+.regions{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px}
+.region{background:#edfdff;border:1px solid #b3e6ee;border-radius:12px;
+ padding:13px 5px;text-align:center;min-width:0}
+.region .pin{font-size:20px;color:#0799ad}
+.region h4{font-size:clamp(9px,1.1vw,13px);margin:6px 0}
+.region strong{display:block;font-size:clamp(21px,2.3vw,32px);margin:8px 0}
+.region small{font-size:10px}
+.region.other{background:#fff0c5}
+.region-total{display:flex;gap:7px;flex-direction:column;justify-content:center}
+.totalbox{flex:1;background:#dcfae9;border-radius:11px;padding:11px;text-align:center}
+.totalbox:last-child{background:#ffd34c}
+.totalbox strong{display:block;font-size:30px;margin-top:5px}
+.totalbox span{font-size:11px;font-weight:800}
+footer{margin-top:0;padding:28px 25px;color:white;
+ background:linear-gradient(160deg,#075c70,#063b50);position:relative;overflow:hidden}
+.footer-inner{max-width:1550px;margin:auto;display:flex;
+ justify-content:space-between;align-items:end;gap:15px;flex-wrap:wrap}
+.footer-slogan{font-family:Georgia,serif;font-style:italic;
+ font-size:clamp(16px,2vw,25px);line-height:1.6}
+.footer-brand{text-align:right;font-size:11px;letter-spacing:2px;line-height:2}
+.editor{display:none;background:white;border:2px solid var(--teal);
+ border-radius:15px;padding:18px;margin:12px 0 20px}
+.editor.open{display:block}
+.editor h2{font-size:18px;margin-top:0}
+.formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.field label{display:block;font-size:11px;font-weight:800;margin-bottom:6px}
+.field input,.field textarea,.field select{width:100%;padding:10px;
+ border:1px solid #cbdfe4;border-radius:8px;background:#fbfefe;color:var(--ink)}
+.field textarea{min-height:65px;resize:vertical}
+.field.full{grid-column:1/-1}
+.editor-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:15px}
+.status{font-size:11px;color:var(--muted);margin-top:10px}
+@media(max-width:900px){
+ .grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .grid3>.panel:last-child{grid-column:1/-1}
+ .regions{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .hero-side{display:none}
+}
+@media(max-width:580px){
+ .hero-inner{align-items:flex-start}.brand{gap:12px}
+ .logo{width:51px;height:51px;font-size:27px;border-radius:14px}
+ .byline{font-size:10px}header.hero{padding:20px 14px}
+ .months{grid-template-columns:repeat(6,minmax(0,1fr))}
+ main{padding:8px 10px 16px}.toolbar{padding:10px 10px 0}
+ .grid3{grid-template-columns:1fr}.grid3>.panel:last-child{grid-column:auto}
+ .panel-head{min-height:70px}.chart{height:205px}
+ .regions{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .region-total{grid-column:1/-1;flex-direction:row}
+ .formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .field.full{grid-column:1/-1}
+ .footer-inner{align-items:flex-start}.footer-brand{text-align:left}
+}
+@media print{
+ .toolbar,.actions,.editor{display:none!important}
+ body{background:white}.panel{break-inside:avoid;box-shadow:none}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+ <div class="hero-inner">
+  <div class="brand">
+   <div class="logo">✚</div>
+   <div>
+    <h1>DASHBOARD<br>KESEHATAN JIWA</h1>
+    <h2>PUSKESMAS NAIBONAT</h2>
+    <div class="byline">Oleh: Yeheskiel Baitanu, S.Kep., Ns.</div>
+   </div>
+  </div>
+  <div class="hero-side">KESEHATAN JIWA<br>UNTUK MASYARAKAT<br>YANG LEBIH BAIK</div>
+ </div>
+</header>
+
+<div class="toolbar">
+ <nav class="months" id="months" aria-label="Pilih bulan"></nav>
+ <div class="actions">
+  <button class="btn primary" onclick="toggleEditor()">✎ EDIT DASHBOARD</button>
+  <button class="btn secondary" onclick="exportData()">↓ EKSPOR JSON</button>
+  <button class="btn secondary" onclick="document.getElementById('importFile').click()">↑ IMPOR JSON</button>
+  <button class="btn secondary" onclick="window.print()">▤ CETAK</button>
+  <input type="file" id="importFile" accept=".json,application/json" hidden>
+ </div>
+</div>
+
+<main>
+<section class="editor" id="editor">
+ <h2>✎ Kelola Data Dashboard</h2>
+ <p style="font-size:12px;line-height:1.7;color:#607c8b">
+ Ubah angka, wilayah, kendala, dan solusi di bawah ini. Klik Simpan untuk memperbarui grafik.
+ Perubahan disimpan di browser perangkat ini. Ekspor JSON untuk membuat cadangan.
+ </p>
+ <div class="formgrid" id="editFields"></div>
+ <div class="editor-actions">
+  <button class="btn primary" onclick="saveEditor()">SIMPAN PERUBAHAN</button>
+  <button class="btn secondary" onclick="resetMonth()">RESET BULAN INI</button>
+  <button class="btn secondary" onclick="toggleEditor()">TUTUP EDITOR</button>
+ </div>
+ <div class="status" id="editStatus"></div>
+</section>
+
+<div id="dashboard"></div>
+</main>
+
+<footer>
+ <div class="footer-inner">
+  <div class="footer-slogan">Setiap Skrining Adalah<br>Langkah Menuju Masyarakat yang Lebih Sehat</div>
+  <div class="footer-brand">PUSKESMAS NAIBONAT<br>KESEHATAN JIWA · HARAPAN BERSAMA</div>
+ </div>
+</footer>
+
+<script>
+"use strict";
+
+const MONTHS=["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGS","SEP","OKTOBER","NOV","DES"];
+const STORAGE="epusbonat-keswa-v1";
+
+function freshData(){
+ return {
+  month:"OKTOBER",
+  spm:{target:35,achieved:36},
+  screening:{target:3259,achieved:5740},
+  bok:{target:6,achieved:2},
+  odgj:{total:50,f20:46,other:3,newMonth:2,cumulative:9},
+  regions:[
+   {name:"OELATIMO",count:11,code:"L6. P5"},
+   {name:"NUNUKURUS",count:4,code:"L2. P2"},
+   {name:"MANUSAK",count:3,code:"L3. P3"},
+   {name:"PUKDALE",count:8,code:"L2. P6"},
+   {name:"NAIBONAT",count:20,code:"L8. P12"},
+   {name:"LAIN-LAIN",count:3,code:""}
+  ],
+  challenges:["Keterbatasan SDM","Stigma masyarakat","Peran keluarga minim"],
+  solutions:["Optimalkan peran keluarga dan kader","Koordinasi lintas sektor","Jadwal rutin","Edukasi kesehatan jiwa"]
+ };
+}
+
+let allData={};
+let currentMonth="OKTOBER";
+let data=freshData();
+let isEditing=false;
+
+function load(){
+ try{
+  const raw=localStorage.getItem(STORAGE);
+  if(raw)allData=JSON.parse(raw);
+ }catch(e){console.warn("Data lokal tidak dapat dibaca",e)}
+ if(!allData[currentMonth])allData[currentMonth]=freshData();
+ data=allData[currentMonth];
+}
+
+function persist(){
+ allData[currentMonth]=data;
+ try{
+  localStorage.setItem(STORAGE,JSON.stringify(allData));
+  return true;
+ }catch(e){
+  alert("Penyimpanan browser gagal. Ekspor data sebagai cadangan.");
+  return false;
+ }
+}
+function number(n){return Number(n||0).toLocaleString("id-ID")}
+function percent(a,b){return b?((a/b)*100).toLocaleString("id-ID",{minimumFractionDigits:2,maximumFractionDigits:2})+"%":"—"}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function safePct(v,max){return Math.max(0,Math.min(100,max?Number(v)/max*100:0))}
+function panelHead(icon,title,headClass,iconClass){
+ return `<div class="panel-head ${headClass}"><div class="icon ${iconClass}">${icon}</div><h3>${title}</h3></div>`;
+}
+function metric(value,label,klass){
+ return `<div class="metric ${klass}"><strong>${value}</strong><span>${label}</span></div>`;
+}
+function barChart(items,max){
+ return `<div class="chart">
+ <div class="chart-y">${[max,max*.75,max*.5,max*.25,0].map(n=>`<span>${number(n)}</span>`).join("")}</div>
+ <div class="chart-cols">${items.map(x=>`
+ <div class="bar-col">
+ <div class="bar-val">${esc(x.label)}</div>
+ <div class="bar ${x.color}" style="height:${safePct(x.value,max)}%"></div>
+ <div class="x-label">${x.name}</div>
+ </div>`).join("")}</div></div>`;
+}
+function renderMonths(){
+ document.getElementById("months").innerHTML=MONTHS.map(m=>
+ `<button class="month ${m===currentMonth?"active":""}" onclick="selectMonth('${m}')">${m}</button>`
+ ).join("");
+}
+function render(){
+ renderMonths();
+ const s=data.spm,sc=data.screening,b=data.bok,o=data.odgj;
+ const sPct=percent(s.achieved,s.target),scPct=percent(sc.achieved,sc.target),bPct=percent(b.achieved,b.target);
+ const sMax=Math.max(10,s.target,s.achieved)*1.2;
+ const scMax=Math.max(100,sc.target,sc.achieved)*1.2;
+ const bMax=Math.max(1,b.target,b.achieved)*1.25;
+ document.getElementById("dashboard").innerHTML=`
+ <div class="grid3">
+  <article class="panel">
+   ${panelHead("♟","SPM PELAYANAN ODGJ","head-mint","i-teal")}
+   <div class="panel-body">
+    <div class="legend">
+     <span><i class="dot" style="background:#ffd33d"></i>Target</span>
+     <span><i class="dot" style="background:#42b84a"></i>Capaian</span>
+     <span><i class="dot" style="background:#147fe5"></i>Persentase</span>
+    </div>
+    ${barChart([
+     {name:"TARGET",value:s.target,label:number(s.target),color:"yellow"},
+     {name:"CAPAIAN",value:s.achieved,label:number(s.achieved),color:"green"},
+     {name:"PERSENTASE",value:Math.min(100,s.target?100*s.achieved/s.target:0),label:sPct,color:"blue"}
+    ],sMax)}
+    <div class="metrics">
+     ${metric(number(s.target),"Target","m-yellow")}
+     ${metric(number(s.achieved),"Capaian","m-green")}
+     ${metric(sPct,"Persentase","m-blue")}
+    </div>
+   </div>
+  </article>
+
+  <article class="panel">
+   ${panelHead("▥","SKRINING JIWA","head-cream","i-teal")}
+   <div class="panel-body">
+    <div class="legend">
+     <span><i class="dot" style="background:#ed2440"></i>Target</span>
+     <span><i class="dot" style="background:#42b84a"></i>Capaian</span>
+     <span><i class="dot" style="background:#147fe5"></i>Persentase</span>
+    </div>
+    ${barChart([
+     {name:"TARGET",value:sc.target,label:number(sc.target),color:"red"},
+     {name:"CAPAIAN",value:sc.achieved,label:number(sc.achieved),color:"green"},
+     {name:"PERSENTASE",value:Math.min(100,sc.target?100*sc.achieved/sc.target:0),label:scPct,color:"blue"}
+    ],scMax)}
+    <div class="metrics">
+     ${metric(number(sc.target),"Target","m-red")}
+     ${metric(number(sc.achieved),"Capaian","m-green")}
+     ${metric(scPct,"Persentase","m-blue")}
+    </div>
+   </div>
+  </article>
+
+  <article class="panel">
+   ${panelHead("↗","GIAT BOK","head-blue","i-blue")}
+   <div class="panel-body">
+    <div class="legend">
+     <span><i class="dot" style="background:#ffd33d"></i>Target</span>
+     <span><i class="dot" style="background:#ed4552"></i>Capaian</span>
+     <span><i class="dot" style="background:#147fe5"></i>Persentase</span>
+    </div>
+    <svg class="linechart" viewBox="0 0 300 220" role="img" aria-label="Grafik target dan capaian Giat BOK">
+     ${[0,2,4,6,8,10].map(n=>`<g><line x1="34" y1="${180-n*15}" x2="286" y2="${180-n*15}" stroke="#d9e8ed" stroke-width="1"/><text x="24" y="${184-n*15}" text-anchor="end" fill="#526b7b" font-size="10">${n}</text></g>`).join("")}
+     <polyline points="70,${180-b.target/bMax*145} 150,${180-b.achieved/bMax*145} 250,${180-Math.min(100,b.target?b.achieved/b.target*100:0)/100*145}" fill="none" stroke="#f5b51b" stroke-width="3"/>
+     ${[
+      {x:70,y:180-b.target/bMax*145,c:"#ffd33d",t:number(b.target)},
+      {x:150,y:180-b.achieved/bMax*145,c:"#ed4552",t:number(b.achieved)},
+      {x:250,y:180-Math.min(100,b.target?b.achieved/b.target*100:0)/100*145,c:"#147fe5",t:bPct}
+     ].map(p=>`<circle cx="${p.x}" cy="${p.y}" r="6" fill="${p.c}"/><text x="${p.x}" y="${p.y-12}" text-anchor="middle" font-size="12" font-weight="bold" fill="#142d40">${p.t}</text>`).join("")}
+     <g fill="#27485c" font-size="9" text-anchor="middle">
+      <text x="70" y="202">TARGET</text><text x="150" y="202">CAPAIAN</text><text x="250" y="202">PERSENTASE</text>
+     </g>
+    </svg>
+    <div class="metrics">
+     ${metric(number(b.target),"Target frekuensi","m-yellow")}
+     ${metric(number(b.achieved),"Capaian","m-red")}
+     ${metric(bPct,"Persentase","m-blue")}
+    </div>
+   </div>
+  </article>
+ </div>
+
+ <div class="grid3 lower">
+  <article class="panel">
+   ${panelHead("♟","INFO ODGJ","head-white","i-teal")}
+   <div class="panel-body">
+    <div class="info-banner">TOTAL ODGJ: ${number(o.total)} ORANG</div>
+    <div class="info-row"><span class="info-symbol">🟡</span>
+     <div><b>ODGJB (F20): ${number(o.f20)}</b><br>Lain-lain: ${number(o.other)}</div>
+    </div>
+    <div class="info-section"><h4>ODGJ BARU</h4>
+     <div class="small-line">▦ Bulan ${esc(currentMonth)}: ${number(o.newMonth)}</div>
+     <div class="small-line">▥ Kumulatif: ${number(o.cumulative)}</div>
+    </div>
+   </div>
+  </article>
+  <article class="panel">
+   ${panelHead("⚠","KENDALA","head-red","i-red")}
+   <div class="panel-body">
+    ${data.challenges.map((v,i)=>`<div class="issue"><span class="number">${i+1}</span><span>${esc(v)}</span></div>`).join("")}
+   </div>
+  </article>
+  <article class="panel">
+   ${panelHead("♧","SOLUSI","head-teal","i-teal")}
+   <div class="panel-body">
+    ${data.solutions.map((v,i)=>`<div class="solution"><span class="number">${i+1}</span><span>${esc(v)}</span></div>`).join("")}
+   </div>
+  </article>
+ </div>
+
+ <section class="region-wrap">
+  <div class="region-heading">📍 JUMLAH ODGJ BERDASARKAN WILAYAH</div>
+  <div class="regions">
+   ${data.regions.map((r,i)=>`<div class="region ${i===5?"other":""}">
+    <div class="pin">●</div><h4>${esc(r.name)}</h4>
+    <strong>${number(r.count)}</strong><small>${esc(r.code)}</small>
+   </div>`).join("")}
+   <div class="region-total">
+    <div class="totalbox"><span>◉ F20</span><strong>${number(o.f20)}</strong></div>
+    <div class="totalbox"><span>♟ TOTAL ODGJ</span><strong>${number(o.total)}</strong></div>
+   </div>
+  </div>
+ </section>
+ <p style="font-size:10px;line-height:1.7;color:#617e8b;margin:12px 3px">
+  E-PUSBONAT · Kesehatan Jiwa Puskesmas Naibonat · Periode ${esc(currentMonth)}.
+  Angka awal berasal dari referensi desain dan perlu diverifikasi terhadap register resmi.
+ </p>`;
+}
+
+function toggleEditor(){
+ isEditing=!isEditing;
+ document.getElementById("editor").classList.toggle("open",isEditing);
+ if(isEditing)buildEditor();
+}
+function inputField(id,label,value,type="number"){
+ return `<div class="field"><label for="${id}">${label}</label>
+ <input id="${id}" type="${type}" value="${esc(value)}" ${type==="number"?'min="0" step="1"':''}></div>`;
+}
+function buildEditor(){
+ const o=data.odgj;
+ let h="";
+ h+=inputField("spmt","SPM ODGJ · Target",data.spm.target);
+ h+=inputField("spma","SPM ODGJ · Capaian",data.spm.achieved);
+ h+=inputField("sct","Skrining jiwa · Target",data.screening.target);
+ h+=inputField("sca","Skrining jiwa · Capaian",data.screening.achieved);
+ h+=inputField("bt","Giat BOK · Target",data.bok.target);
+ h+=inputField("ba","Giat BOK · Capaian",data.bok.achieved);
+ h+=inputField("ot","Total ODGJ",o.total);
+ h+=inputField("of","Jumlah F20",o.f20);
+ h+=inputField("oo","ODGJ lain-lain",o.other);
+ h+=inputField("on","ODGJ baru bulan ini",o.newMonth);
+ h+=inputField("oc","ODGJ baru kumulatif",o.cumulative);
+ data.regions.forEach((r,i)=>{
+  h+=inputField("rn"+i,`Wilayah ${i+1} · Nama`,r.name,"text");
+  h+=inputField("rc"+i,`Wilayah ${i+1} · Jumlah`,r.count);
+  h+=inputField("rcode"+i,`Wilayah ${i+1} · Kode`,r.code,"text");
+ });
+ h+=`<div class="field full"><label>Kendala (satu kendala per baris)</label>
+ <textarea id="challenges">${esc(data.challenges.join("\n"))}</textarea></div>`;
+ h+=`<div class="field full"><label>Solusi (satu solusi per baris)</label>
+ <textarea id="solutions">${esc(data.solutions.join("\n"))}</textarea></div>`;
+ document.getElementById("editFields").innerHTML=h;
+}
+function readNum(id){
+ const el=document.getElementById(id);
+ if(!el)throw Error("Field tidak ditemukan: "+id);
+ const v=el.value.trim();
+ if(v===""||!Number.isFinite(Number(v))||Number(v)<0)throw Error("Periksa kembali angka pada "+id);
+ return Number(v);
+}
+function saveEditor(){
+ try{
+  const n={
+   spm:{target:readNum("spmt"),achieved:readNum("spma")},
+   screening:{target:readNum("sct"),achieved:readNum("sca")},
+   bok:{target:readNum("bt"),achieved:readNum("ba")},
+   odgj:{
+    total:readNum("ot"),f20:readNum("of"),other:readNum("oo"),
+    newMonth:readNum("on"),cumulative:readNum("oc")
+   }
+  };
+  n.regions=data.regions.map((r,i)=>({
+   name:document.getElementById("rn"+i).value.trim(),
+   count:readNum("rc"+i),
+   code:document.getElementById("rcode"+i).value.trim()
+  }));
+  n.challenges=document.getElementById("challenges").value.split("\n").map(s=>s.trim()).filter(Boolean);
+  n.solutions=document.getElementById("solutions").value.split("\n").map(s=>s.trim()).filter(Boolean);
+  if(n.regions.some(r=>!r.name))throw Error("Nama wilayah tidak boleh kosong.");
+  data={...data,...n,month:currentMonth};
+  if(persist()){
+   render();
+   buildEditor();
+   document.getElementById("editStatus").textContent="Perubahan berhasil disimpan pada browser ini.";
+  }
+ }catch(e){alert("Data belum disimpan: "+e.message)}
+}
+function selectMonth(month){
+ currentMonth=month;
+ if(!allData[month])allData[month]=freshData();
+ data=allData[month];
+ persist();
+ render();
+ if(isEditing)buildEditor();
+}
+function resetMonth(){
+ if(!confirm("Kembalikan data bulan "+currentMonth+" ke data awal?"))return;
+ allData[currentMonth]=freshData();
+ data=allData[currentMonth];
+ persist();render();buildEditor();
+}
+function exportData(){
+ const blob=new Blob([JSON.stringify({app:"E-PUSBONAT-Keswa",version:1,months:allData},null,2)],{type:"application/json"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="E-PUSBONAT-Keswa-"+currentMonth+".json";
+ a.click();URL.revokeObjectURL(url);
+}
+document.getElementById("importFile").addEventListener("change",async e=>{
+ const file=e.target.files[0];if(!file)return;
+ try{
+  const obj=JSON.parse(await file.text());
+  const imported=obj.months||obj;
+  if(!imported||typeof imported!=="object")throw Error("Format JSON tidak sesuai.");
+  if(!confirm("Impor data akan mengganti data bulan yang cocok. Lanjutkan?"))return;
+  for(const m of MONTHS){
+   if(imported[m]&&imported[m].spm&&imported[m].regions){
+    allData[m]=imported[m];
+   }
+  }
+  if(!allData[currentMonth])throw Error("Tidak ada data untuk bulan aktif.");
+  data=allData[currentMonth];
+  if(persist()){render();if(isEditing)buildEditor();alert("Impor berhasil.");}
+ }catch(err){alert("Impor gagal: "+err.message)}
+ e.target.value="";
+});
+load();
+render();
+</script>
+</body>
+</html>
