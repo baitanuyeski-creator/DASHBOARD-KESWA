@@ -213,7 +213,7 @@ footer{margin-top:0;padding:28px 25px;color:white;
  <h2>✎ Kelola Data Dashboard</h2>
  <p style="font-size:12px;line-height:1.7;color:#607c8b">
  Ubah angka, wilayah, kendala, dan solusi di bawah ini. Klik Simpan untuk memperbarui grafik.
- Perubahan disimpan di browser perangkat ini. Ekspor JSON untuk membuat cadangan.
+ Perubahan tersimpan online dan dibagikan ke perangkat lain. Ekspor JSON untuk membuat cadangan.
  </p>
  <div class="formgrid" id="editFields"></div>
  <div class="editor-actions">
@@ -234,11 +234,27 @@ footer{margin-top:0;padding:28px 25px;color:white;
  </div>
 </footer>
 
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script>
 "use strict";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyAR-dCoSD1yHPJOcrwNIq4CzXMur0RKUuM",
+  authDomain: "dashboard-kesehatan-jiwa.firebaseapp.com",
+  projectId: "dashboard-kesehatan-jiwa",
+  storageBucket: "dashboard-kesehatan-jiwa.firebasestorage.app",
+  messagingSenderId: "400003838850",
+  appId: "1:400003838850:web:d2ebabf382e5827f4c959b",
+  measurementId: "G-73N7GKMS4R"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const monthCollection = db.collection("dashboardMonths");
+
+
 const MONTHS=["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGS","SEP","OKTOBER","NOV","DES"];
-const STORAGE="epusbonat-keswa-v1";
+const STORAGE="epusbonat-keswa-v1"; // dipertahankan untuk kompatibilitas ekspor
 
 function freshData(){
  return {
@@ -265,24 +281,58 @@ let currentMonth="OKTOBER";
 let data=freshData();
 let isEditing=false;
 
+let unsubscribeMonth = null;
+let applyingRemote = false;
+
 function load(){
- try{
-  const raw=localStorage.getItem(STORAGE);
-  if(raw)allData=JSON.parse(raw);
- }catch(e){console.warn("Data lokal tidak dapat dibaca",e)}
- if(!allData[currentMonth])allData[currentMonth]=freshData();
- data=allData[currentMonth];
+  subscribeMonth(currentMonth);
 }
 
-function persist(){
- allData[currentMonth]=data;
- try{
-  localStorage.setItem(STORAGE,JSON.stringify(allData));
-  return true;
- }catch(e){
-  alert("Penyimpanan browser gagal. Ekspor data sebagai cadangan.");
-  return false;
- }
+function subscribeMonth(month){
+  if(unsubscribeMonth){ unsubscribeMonth(); unsubscribeMonth=null; }
+  document.getElementById("editStatus").textContent = "Menghubungkan ke database bersama…";
+  unsubscribeMonth = monthCollection.doc(month).onSnapshot(async snap => {
+    applyingRemote = true;
+    if(snap.exists){
+      data = snap.data().data || freshData();
+    } else {
+      data = freshData();
+      data.month = month;
+      try {
+        await monthCollection.doc(month).set({data, updatedAt: firebase.firestore.FieldValue.serverTimestamp()});
+      } catch(err) {
+        console.error(err);
+        document.getElementById("editStatus").textContent = "Gagal membuat data bulan: " + err.message;
+      }
+    }
+    allData[month] = data;
+    render();
+    if(isEditing) buildEditor();
+    document.getElementById("editStatus").textContent = "Terhubung · perubahan tersinkron otomatis.";
+    applyingRemote = false;
+  }, err => {
+    applyingRemote = false;
+    console.error("Firestore read error:", err);
+    document.getElementById("editStatus").textContent = "Gagal membaca database: " + err.message;
+    alert("Dashboard tidak dapat membaca database Firestore. Periksa Rules dan koneksi internet.\n" + err.message);
+  });
+}
+
+async function persist(){
+  allData[currentMonth] = data;
+  try {
+    await monthCollection.doc(currentMonth).set({
+      data: data,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    document.getElementById("editStatus").textContent = "Perubahan tersimpan online.";
+    return true;
+  } catch(e) {
+    console.error("Firestore write error:", e);
+    document.getElementById("editStatus").textContent = "Gagal menyimpan: " + e.message;
+    alert("Penyimpanan online gagal. Periksa aturan Firestore dan koneksi internet.\\n" + e.message);
+    return false;
+  }
 }
 function number(n){return Number(n||0).toLocaleString("id-ID")}
 function percent(a,b){return b?((a/b)*100).toLocaleString("id-ID",{minimumFractionDigits:2,maximumFractionDigits:2})+"%":"—"}
@@ -505,18 +555,19 @@ function saveEditor(){
  }catch(e){alert("Data belum disimpan: "+e.message)}
 }
 function selectMonth(month){
- currentMonth=month;
- if(!allData[month])allData[month]=freshData();
- data=allData[month];
- persist();
- render();
- if(isEditing)buildEditor();
+  currentMonth=month;
+  data=allData[month] || freshData();
+  render();
+  subscribeMonth(month);
+  if(isEditing)buildEditor();
 }
-function resetMonth(){
- if(!confirm("Kembalikan data bulan "+currentMonth+" ke data awal?"))return;
- allData[currentMonth]=freshData();
- data=allData[currentMonth];
- persist();render();buildEditor();
+async function resetMonth(){
+  if(!confirm("Kembalikan data bulan "+currentMonth+" ke data awal?"))return;
+  data=freshData();
+  data.month=currentMonth;
+  allData[currentMonth]=data;
+  const ok=await persist();
+  if(ok){render();buildEditor();}
 }
 function exportData(){
  const blob=new Blob([JSON.stringify({app:"E-PUSBONAT-Keswa",version:1,months:allData},null,2)],{type:"application/json"});
@@ -543,8 +594,8 @@ document.getElementById("importFile").addEventListener("change",async e=>{
  }catch(err){alert("Impor gagal: "+err.message)}
  e.target.value="";
 });
-load();
 render();
+load();
 </script>
 </body>
 </html>
