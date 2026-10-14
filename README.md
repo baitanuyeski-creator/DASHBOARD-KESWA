@@ -40,6 +40,10 @@ python3 -m http.server 8000
 
 Kemudian buka `http://localhost:8000`.
 
+## Firebase dan sinkronisasi data
+
+Versi HTML ini menggunakan konfigurasi aplikasi web Firebase yang sudah terdaftar dan koleksi Firestore `dashboardMonths`. Saat halaman dibuka, aplikasi mencoba membaca data bulan dari Firestore; saat data disimpan, aplikasi menyimpan ke Firestore dan cache browser. Perubahan pada dokumen bulan aktif dipantau melalui listener realtime. Pastikan Rules Firestore mengizinkan operasi yang diperlukan. Jika koneksi atau Rules menolak operasi, periksa status Firebase yang tampil di sudut kanan bawah halaman.
+
 ## Catatan data dan privasi
 
 -   Periksa dan validasi seluruh angka dashboard terhadap

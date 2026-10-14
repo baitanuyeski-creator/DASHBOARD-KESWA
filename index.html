@@ -443,7 +443,7 @@ footer{margin-top:0;padding:28px 25px;color:white;
  <h2>✎ Kelola Data Dashboard</h2>
  <p style="font-size:12px;line-height:1.7;color:#607c8b">
  Ubah angka, wilayah, kendala, dan solusi di bawah ini. Klik Simpan untuk memperbarui grafik.
- Perubahan disimpan di browser perangkat ini. Ekspor JSON untuk membuat cadangan.
+ Perubahan disimpan ke Firebase dan cache browser jika koneksi tersedia. Ekspor JSON untuk cadangan.
  </p>
  <div class="formgrid" id="editFields"></div>
  <div class="editor-actions">
@@ -474,11 +474,63 @@ footer{margin-top:0;padding:28px 25px;color:white;
 </div>
 
 
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
 <script>
 "use strict";
 
 const MONTHS=["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGS","SEP","OKTOBER","NOV","DES"];
 const STORAGE="epusbonat-keswa-v1";
+
+// Firebase lama: DASHBOARD KESEHATAN JIWA
+const firebaseConfig = {
+  apiKey: "AIzaSyAR-dCoSD1yHPJOcrwNIq4CzXMur0RKUuM",
+  authDomain: "dashboard-kesehatan-jiwa.firebaseapp.com",
+  projectId: "dashboard-kesehatan-jiwa",
+  storageBucket: "dashboard-kesehatan-jiwa.firebasestorage.app",
+  messagingSenderId: "400003838850",
+  appId: "1:400003838850:web:d2ebabf382e5827f4c959b",
+  measurementId: "G-73N7GKMS4R"
+};
+let keswaDb = null;
+let firebaseReady = false;
+let firebaseSyncMessage = "Menghubungkan ke Firebase…";
+let activeMonthUnsubscribe = null;
+try {
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  keswaDb = firebase.firestore();
+  firebaseReady = true;
+  firebaseSyncMessage = "Firebase terhubung";
+} catch (err) {
+  console.error("Firebase belum dapat diinisialisasi:", err);
+  firebaseSyncMessage = "Firebase belum terhubung; perubahan hanya tersimpan lokal";
+}
+
+function monthDocId(month) {
+  // Samakan dengan ID dokumen yang sudah ada di dashboardMonths, misalnya OKTOBER.
+  return String(month).toUpperCase();
+}
+async function readMonthFromFirebase(month) {
+  if (!keswaDb) return null;
+  const snap = await keswaDb.collection("dashboardMonths").doc(monthDocId(month)).get();
+  if (!snap.exists) return null;
+  const doc = snap.data() || {};
+  // Skema yang ada di Firestore: { month: "AGS", data: { spm, screening, bok, ... } }
+  const remote = doc.data && typeof doc.data === "object" ? doc.data : doc;
+  if (!remote.spm || !remote.regions) return null;
+  return {...freshData(), ...remote, month};
+}
+async function saveMonthToFirebase(month, value) {
+  if (!keswaDb) throw new Error("Firebase belum siap.");
+  await keswaDb.collection("dashboardMonths").doc(monthDocId(month)).set({
+    month: month,
+    data: JSON.parse(JSON.stringify(value)),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  }, {merge: true});
+}
+
 
 function freshData(){
  return {
@@ -512,17 +564,97 @@ function load(){
  }catch(e){console.warn("Data lokal tidak dapat dibaca",e)}
  if(!allData[currentMonth])allData[currentMonth]=freshData();
  data=allData[currentMonth];
+ // Render segera dari cache, lalu sinkronkan dengan data Firebase.
+ render();
+ syncCurrentMonthFromFirebase();
 }
-
+function subscribeCurrentMonthRealtime(month){
+ if(activeMonthUnsubscribe){ activeMonthUnsubscribe(); activeMonthUnsubscribe=null; }
+ if(!keswaDb) return;
+ activeMonthUnsubscribe=keswaDb.collection("dashboardMonths").doc(monthDocId(month)).onSnapshot(snap=>{
+  if(!snap.exists) return;
+  const doc=snap.data()||{};
+  const remote=doc.data && typeof doc.data === "object" ? doc.data : doc;
+  if(!remote.spm || !remote.regions) return;
+  const incoming={...freshData(),...remote,month};
+  allData[month]=incoming;
+  try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
+  if(currentMonth===month){
+   data=incoming;
+   render();
+   if(isEditing) buildEditor();
+   firebaseSyncMessage="Realtime aktif · data "+month+" tersinkron";
+   updateFirebaseStatus();
+  }
+ },err=>{
+  console.error("Realtime Firestore error:",err);
+  firebaseSyncMessage="Realtime Firebase gagal; periksa koneksi dan Rules";
+  updateFirebaseStatus();
+ });
+}
+async function syncCurrentMonthFromFirebase(){
+ if(!keswaDb) return;
+ subscribeCurrentMonthRealtime(currentMonth);
+ const requestedMonth=currentMonth;
+ try{
+  const remote=await readMonthFromFirebase(requestedMonth);
+  if(remote){
+   allData[requestedMonth]=remote;
+   try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
+   if(currentMonth===requestedMonth){
+    data=allData[requestedMonth];
+    render();
+    if(isEditing)buildEditor();
+   }
+   firebaseSyncMessage="Data "+requestedMonth+" tersinkron dari Firebase";
+  }else{
+   firebaseSyncMessage="Dokumen "+requestedMonth+" belum ada di Firebase; data lokal dipertahankan";
+  }
+  updateFirebaseStatus();
+ }catch(e){
+  console.error("Gagal membaca Firestore:",e);
+  firebaseSyncMessage="Gagal membaca Firebase; data lokal tetap tersedia";
+  updateFirebaseStatus();
+ }
+}
 function persist(){
  allData[currentMonth]=data;
  try{
   localStorage.setItem(STORAGE,JSON.stringify(allData));
-  return true;
  }catch(e){
   alert("Penyimpanan browser gagal. Ekspor data sebagai cadangan.");
   return false;
  }
+ // Simpan ke Firebase secara asynchronous; status diperbarui setelah hasil nyata diterima.
+ if(keswaDb){
+  const monthToSave=currentMonth;
+  const dataToSave=JSON.parse(JSON.stringify(data));
+  firebaseSyncMessage="Menyimpan "+monthToSave+" ke Firebase…";
+  updateFirebaseStatus();
+  saveMonthToFirebase(monthToSave,dataToSave).then(()=>{
+   firebaseSyncMessage="Tersimpan di Firebase · "+monthToSave;
+   updateFirebaseStatus();
+  }).catch(err=>{
+   console.error("Gagal menyimpan ke Firestore:",err);
+   firebaseSyncMessage="Gagal menyimpan ke Firebase; data lokal tersimpan";
+   updateFirebaseStatus();
+   alert("Data tersimpan di browser, tetapi gagal disimpan ke Firebase. Periksa koneksi dan Rules Firestore.");
+  });
+ }else{
+  firebaseSyncMessage="Firebase belum terhubung; data hanya tersimpan lokal";
+  updateFirebaseStatus();
+ }
+ return true;
+}
+function updateFirebaseStatus(){
+ let el=document.getElementById("firebaseSyncStatus");
+ if(!el){
+  el=document.createElement("div");
+  el.id="firebaseSyncStatus";
+  el.style.cssText="position:fixed;right:10px;bottom:10px;z-index:1000;max-width:90vw;padding:7px 10px;border-radius:9px;background:#073f4b;color:#fff;font:12px/1.4 system-ui;box-shadow:0 3px 12px #0002";
+  document.body.appendChild(el);
+ }
+ el.textContent=firebaseSyncMessage;
 }
 function number(n){return Number(n||0).toLocaleString("id-ID")}
 function percent(a,b){return b?((a/b)*100).toLocaleString("id-ID",{minimumFractionDigits:2,maximumFractionDigits:2})+"%":"—"}
@@ -744,13 +876,13 @@ function saveEditor(){
   }
  }catch(e){alert("Data belum disimpan: "+e.message)}
 }
-function selectMonth(month){
+async function selectMonth(month){
  currentMonth=month;
  if(!allData[month])allData[month]=freshData();
  data=allData[month];
- persist();
  render();
  if(isEditing)buildEditor();
+ await syncCurrentMonthFromFirebase();
 }
 function resetMonth(){
  if(!confirm("Kembalikan data bulan "+currentMonth+" ke data awal?"))return;
@@ -848,7 +980,7 @@ function printInfographic(){
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeInfographic()});
 
 load();
-render();
+updateFirebaseStatus();
 </script>
 </body>
 </html>
