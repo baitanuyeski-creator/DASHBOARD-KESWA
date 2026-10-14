@@ -1,28 +1,64 @@
-# E-PUSBONAT — Dashboard Kesehatan Jiwa
+# Dashboard Kesehatan Jiwa --- Puskesmas Naibonat
 
-Dashboard responsif untuk monitoring Kesehatan Jiwa Puskesmas Naibonat.
+Dashboard pemantauan program Kesehatan Jiwa (Keswa) untuk Puskesmas
+Naibonat. Halaman dibuat sebagai aplikasi statis HTML, CSS, dan
+JavaScript agar dapat dijalankan melalui GitHub Pages.
 
 ## Fitur
-- Dashboard infografis responsif.
-- Pemilihan bulan.
-- Edit data langsung melalui antarmuka.
-- Penyimpanan browser menggunakan localStorage.
-- Impor dan ekspor JSON.
-- Tampilan cetak.
 
-## Menjalankan lokal
-Python 3 diperlukan.
+-   Dashboard ringkasan SPM Pelayanan ODGJ, Skrining Jiwa, dan Giat BOK.
+-   Filter/pilihan bulan.
+-   Informasi jumlah ODGJ dan sebaran berdasarkan wilayah.
+-   Pengelolaan data pada browser, termasuk fitur edit serta
+    impor/ekspor JSON yang tersedia di aplikasi.
+-   Infografis satu halaman dengan opsi ekspor PNG resolusi tinggi dan
+    opsi cetak/simpan PDF, jika fitur tersebut tersedia pada versi
+    `index.html` yang dipasang.
+-   Tampilan responsif untuk desktop dan perangkat seluler.
 
-```bash
+## Menjalankan di GitHub Pages
+
+1.  Pastikan file utama bernama **`index.html`** berada di direktori
+    utama (root) repositori.
+2.  Unggah `index.html` dan `README.md` ke repositori GitHub.
+3.  Buka **Settings → Pages**.
+4.  Pada **Build and deployment**, pilih **Deploy from a branch**.
+5.  Pilih branch `main` dan folder `/(root)`, lalu klik **Save**.
+6.  Tunggu proses deployment selesai, lalu buka URL GitHub Pages yang
+    ditampilkan di halaman Settings → Pages.
+
+> GitHub Pages hanya menyajikan file statis. Dashboard ini tidak
+> membutuhkan README untuk berjalan; README hanya dokumentasi proyek.
+
+## Menjalankan secara lokal
+
+Buka `index.html` langsung di browser, atau dari folder proyek jalankan:
+
+``` bash
 python3 -m http.server 8000
 ```
 
-Buka http://127.0.0.1:8000
+Kemudian buka `http://localhost:8000`.
 
-## Hosting GitHub Pages
-Unggah `index.html` dan `README.md` ke repository GitHub.
-Aktifkan Settings > Pages > Deploy from a branch > main > / (root).
+## Catatan data dan privasi
 
-## Catatan data
-Data awal disalin dari referensi visual. Validasi dengan register resmi sebelum pelaporan.
-Data edit tersimpan di browser yang digunakan, bukan otomatis tersinkron ke pengguna atau perangkat lain.
+-   Periksa dan validasi seluruh angka dashboard terhadap
+    register/sumber resmi sebelum digunakan untuk pelaporan.
+-   Jika aplikasi menyimpan perubahan menggunakan `localStorage`,
+    perubahan itu hanya tersimpan pada browser/perangkat tersebut dan
+    tidak otomatis tersinkron ke pengguna atau perangkat lain.
+-   Hindari memasukkan identitas pasien atau data pribadi yang tidak
+    diperlukan ke repositori publik.
+-   Jangan mengunggah kredensial, token, atau data pasien ke GitHub.
+
+## Struktur minimum repositori
+
+``` text
+E-PUSBONAT-Keswa/
+├── index.html
+└── README.md
+```
+
+Jika versi `index.html` menggunakan aset terpisah, sertakan juga seluruh
+file CSS, JavaScript, gambar, atau aset lain yang dirujuk oleh HTML
+tersebut.

@@ -180,6 +180,235 @@ footer{margin-top:0;padding:28px 25px;color:white;
  .toolbar,.actions,.editor{display:none!important}
  body{background:white}.panel{break-inside:avoid;box-shadow:none}
 }
+
+/* One-page phone-readable infographic export */
+.infographic-modal{display:none;position:fixed;inset:0;z-index:99999;overflow:auto;background:#062f40ee;padding:12px}
+.infographic-modal.open{display:block}
+.infographic-actions{position:sticky;top:0;z-index:3;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:8px;margin:0 auto 12px}
+.infographic-preview{width:min(100%,900px);margin:0 auto;background:#f1fbfc;box-shadow:0 18px 60px #001c2a66;border-radius:16px;overflow:hidden}
+.infographic-preview .hero{padding:22px 26px!important}
+.infographic-preview .hero-inner{max-width:none!important}
+.infographic-preview .logo{width:60px!important;height:60px!important;font-size:30px!important}
+.infographic-preview .hero h1{font-size:30px!important}
+.infographic-preview .hero h2{font-size:20px!important}
+.infographic-preview .toolbar{display:none!important}
+.infographic-preview main{max-width:none!important;padding:12px 14px 16px!important}
+.infographic-preview .grid3{grid-template-columns:1fr 1fr!important;gap:10px!important}
+.infographic-preview .grid3:first-child>.panel:last-child{grid-column:1/-1!important}
+.infographic-preview .grid3.lower{grid-template-columns:1fr!important}
+.infographic-preview .panel{break-inside:avoid;box-shadow:none!important}
+.infographic-preview .panel-head{min-height:58px!important;padding:10px!important}
+.infographic-preview .icon{width:42px!important;height:42px!important;font-size:20px!important}
+.infographic-preview .panel-head h3{font-size:17px!important}
+.infographic-preview .panel-body{padding:10px!important}
+.infographic-preview .chart{height:185px!important}
+.infographic-preview .bar-val{font-size:12px!important}
+.infographic-preview .x-label{font-size:10px!important}
+.infographic-preview .metric{padding:8px 3px!important}
+.infographic-preview .metric strong{font-size:18px!important}
+.infographic-preview .metric span{font-size:11px!important}
+.infographic-preview .regions{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.infographic-preview .region-total{grid-column:1/-1!important;flex-direction:row!important}
+.infographic-preview .region h4{font-size:12px!important}
+.infographic-preview .region strong{font-size:25px!important}
+.infographic-preview footer{padding:16px 18px!important}
+.infographic-preview .footer-slogan{font-size:16px!important}
+.infographic-preview .footer-brand{text-align:right!important}
+@media(max-width:580px){
+ .infographic-modal{padding:5px}
+ .infographic-preview .hero{padding:16px 12px!important}
+ .infographic-preview .hero h1{font-size:22px!important}
+ .infographic-preview .hero h2{font-size:16px!important}
+ .infographic-preview main{padding:8px!important}
+ .infographic-preview .grid3{grid-template-columns:1fr!important}
+ .infographic-preview .grid3:first-child>.panel:last-child{grid-column:auto!important}
+ .infographic-preview .chart{height:190px!important}
+ .infographic-preview .footer-inner{align-items:flex-start!important}
+ .infographic-preview .footer-brand{text-align:left!important}
+}
+@media print{
+ body.infographic-print>*{display:none!important}
+ body.infographic-print #infographicModal{display:block!important;position:static!important;overflow:visible!important;padding:0!important;background:#fff!important}
+ body.infographic-print .infographic-actions{display:none!important}
+ body.infographic-print .infographic-preview{width:100%!important;max-width:none!important;box-shadow:none!important;border-radius:0!important}
+ @page{size:A4 portrait;margin:8mm}
+}
+
+
+/* OPTIMASI HP: dashboard tetap jelas, tidak melebar/terpotong */
+@media (max-width: 600px) {
+  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+  header.hero { padding: 17px 12px; }
+  .hero-inner { width: 100%; }
+  .brand { min-width: 0; align-items: center; gap: 10px; }
+  .brand > div:last-child { min-width: 0; }
+  .hero h1 { font-size: clamp(19px, 5.4vw, 25px); letter-spacing: -.45px; overflow-wrap: anywhere; }
+  .hero h2 { font-size: clamp(13px, 3.8vw, 17px); line-height: 1.15; }
+  .byline { font-size: 10px; line-height: 1.35; }
+  .logo { flex: 0 0 46px; width: 46px; height: 46px; font-size: 24px; }
+  .toolbar { padding: 9px 8px 0; }
+  .months { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; padding: 7px; }
+  .month { min-height: 36px; padding: 8px 2px; font-size: 11px; }
+  .actions { justify-content: stretch; gap: 6px; }
+  .actions .btn { flex: 1 1 calc(50% - 6px); min-width: 0; padding: 10px 7px; font-size: 11px; }
+  main { padding: 8px 8px 14px; }
+  .grid3 { grid-template-columns: minmax(0, 1fr) !important; gap: 10px; }
+  .grid3 > .panel:last-child { grid-column: auto !important; }
+  .panel { border-radius: 14px; }
+  .panel-head { min-height: 60px; gap: 9px; padding: 10px; }
+  .panel-head h3 { font-size: 16px; line-height: 1.2; }
+  .panel-body { padding: 9px; }
+  .chart { width: 100%; height: 210px; }
+  .metrics { gap: 4px; }
+  .metric { min-width: 0; padding: 8px 3px; }
+  .metric strong { font-size: clamp(15px, 4.5vw, 19px); }
+  .metric span { font-size: 10px; line-height: 1.2; overflow-wrap: anywhere; }
+  .regions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  .region { min-width: 0; padding: 9px 5px; }
+  .region h4 { font-size: 11px; overflow-wrap: anywhere; }
+  .region strong { font-size: 22px; }
+  .region-total { grid-column: 1 / -1 !important; }
+  .footer-inner { gap: 10px; flex-direction: column; }
+  .footer-brand { text-align: left; }
+  .editor { margin: 8px; padding: 12px; }
+  .formgrid { grid-template-columns: minmax(0, 1fr) !important; }
+  input, select, textarea { max-width: 100%; }
+}
+/* Pratinjau/simpan PNG berbentuk infografis vertikal seperti referensi */
+.infographic-preview { width: min(100%, 980px); }
+.infographic-preview .grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+.infographic-preview .grid3:first-child > .panel:last-child { grid-column: auto !important; }
+.infographic-preview .grid3.lower { grid-template-columns: 1fr 1fr 1fr !important; }
+.infographic-preview .regions { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
+.infographic-preview .region-total { grid-column: auto !important; flex-direction: column !important; }
+@media (max-width: 600px) {
+  .infographic-modal { padding: 5px; }
+  .infographic-preview { width: 100%; border-radius: 10px; }
+  .infographic-preview .hero { padding: 14px 10px !important; }
+  .infographic-preview .hero-inner { align-items: center !important; }
+  .infographic-preview .logo { flex: 0 0 38px; width: 38px !important; height: 38px !important; font-size: 21px !important; }
+  .infographic-preview .hero h1 { font-size: 19px !important; }
+  .infographic-preview .hero h2 { font-size: 13px !important; }
+  .infographic-preview .byline { font-size: 9px !important; }
+  .infographic-preview main { padding: 6px !important; }
+  .infographic-preview .grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 5px !important; }
+  .infographic-preview .grid3.lower { grid-template-columns: 1fr 1fr 1fr !important; }
+  .infographic-preview .panel { border-radius: 9px !important; }
+  .infographic-preview .panel-head { display: block !important; min-height: 0 !important; padding: 6px 4px !important; }
+  .infographic-preview .icon { display: none !important; }
+  .infographic-preview .panel-head h3 { font-size: 10px !important; line-height: 1.1 !important; }
+  .infographic-preview .panel-body { padding: 4px !important; }
+  .infographic-preview .chart { height: 105px !important; }
+  .infographic-preview .bar-val { font-size: 8px !important; }
+  .infographic-preview .x-label { font-size: 7px !important; }
+  .infographic-preview .metric { padding: 4px 2px !important; }
+  .infographic-preview .metric strong { font-size: 10px !important; }
+  .infographic-preview .metric span { font-size: 7px !important; }
+  .infographic-preview .regions { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 4px !important; }
+  .infographic-preview .region-total { grid-column: 1 / -1 !important; flex-direction: row !important; }
+  .infographic-preview .region h4 { font-size: 8px !important; }
+  .infographic-preview .region strong { font-size: 15px !important; }
+  .infographic-preview footer { padding: 10px !important; }
+  .infographic-preview .footer-inner { flex-direction: row !important; }
+  .infographic-preview .footer-brand { text-align: right !important; }
+}
+
+
+/* INFOGRAFIS EXPORT: kanvas tetap lebar dan proporsional walau dibuka dari HP */
+.infographic-preview{
+ width:1200px!important;max-width:none!important;margin:0 auto!important;
+ font-size:16px!important;overflow:visible!important;
+}
+.infographic-preview .hero{padding:28px 34px!important}
+.infographic-preview .hero h1{font-size:38px!important;line-height:1.08!important}
+.infographic-preview .hero h2{font-size:25px!important}
+.infographic-preview .byline{font-size:15px!important}
+.infographic-preview main{padding:18px 22px 22px!important}
+.infographic-preview .grid3{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
+.infographic-preview .grid3:first-child>.panel:last-child{grid-column:auto!important}
+.infographic-preview .grid3.lower{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.infographic-preview .panel-head{min-height:82px!important;padding:14px!important;gap:12px!important}
+.infographic-preview .panel-head h3{font-size:23px!important;line-height:1.15!important}
+.infographic-preview .icon{width:52px!important;height:52px!important;font-size:25px!important;display:flex!important}
+.infographic-preview .panel-body{padding:14px!important}
+.infographic-preview .chart{height:300px!important;min-height:300px!important}
+.infographic-preview .bar-val{font-size:17px!important}
+.infographic-preview .x-label{font-size:14px!important}
+.infographic-preview .metric{padding:12px 5px!important}
+.infographic-preview .metric strong{font-size:25px!important}
+.infographic-preview .metric span{font-size:14px!important;line-height:1.25!important}
+.infographic-preview .regions{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:8px!important}
+.infographic-preview .region-total{grid-column:auto!important;flex-direction:column!important}
+.infographic-preview .region{padding:14px 8px!important}
+.infographic-preview .region h4{font-size:15px!important}
+.infographic-preview .region strong{font-size:30px!important}
+.infographic-preview footer{padding:24px 28px!important}
+.infographic-preview .footer-slogan{font-size:22px!important}
+.infographic-preview .footer-brand{font-size:12px!important;text-align:right!important}
+.infographic-preview .item,.infographic-preview li{font-size:17px!important;line-height:1.35!important}
+@media(max-width:600px){
+ .infographic-modal{overflow:auto!important}
+ .infographic-preview{width:1200px!important;max-width:none!important}
+}
+
+
+/* FIX INFOGRAFIS WILAYAH: enam wilayah satu baris lurus, tanpa kartu menggantung */
+.infographic-preview .regions {
+  display: grid !important;
+  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+  gap: 6px !important;
+  align-items: stretch !important;
+}
+.infographic-preview .region {
+  min-width: 0 !important;
+  width: auto !important;
+  box-sizing: border-box !important;
+  padding: 10px 4px !important;
+  overflow-wrap: anywhere !important;
+}
+.infographic-preview .region h4 {
+  font-size: clamp(9px, 1.05vw, 13px) !important;
+  line-height: 1.15 !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+.infographic-preview .region strong {
+  font-size: clamp(18px, 2vw, 27px) !important;
+  line-height: 1.1 !important;
+}
+.infographic-preview .region-total {
+  grid-column: auto !important;
+  min-width: 0 !important;
+}
+@media (max-width: 600px) {
+  /* PNG tetap satu baris horizontal; pengguna dapat memperbesar pratinjau di HP */
+  .infographic-preview .regions {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    gap: 3px !important;
+  }
+  .infographic-preview .region {
+    padding: 7px 2px !important;
+    border-radius: 7px !important;
+  }
+  .infographic-preview .region h4 {
+    font-size: 8px !important;
+    line-height: 1.05 !important;
+  }
+  .infographic-preview .region strong {
+    font-size: 13px !important;
+  }
+  .infographic-preview .region small,
+  .infographic-preview .region p {
+    font-size: 7px !important;
+    line-height: 1.1 !important;
+  }
+  .infographic-preview .region-total {
+    grid-column: auto !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -204,6 +433,7 @@ footer{margin-top:0;padding:28px 25px;color:white;
   <button class="btn secondary" onclick="exportData()">↓ EKSPOR JSON</button>
   <button class="btn secondary" onclick="document.getElementById('importFile').click()">↑ IMPOR JSON</button>
   <button class="btn secondary" onclick="window.print()">▤ CETAK</button>
+  <button class="btn primary" onclick="openInfographic()">▧ INFOGRAFIS PNG 1 HALAMAN</button>
   <input type="file" id="importFile" accept=".json,application/json" hidden>
  </div>
 </div>
@@ -213,7 +443,7 @@ footer{margin-top:0;padding:28px 25px;color:white;
  <h2>✎ Kelola Data Dashboard</h2>
  <p style="font-size:12px;line-height:1.7;color:#607c8b">
  Ubah angka, wilayah, kendala, dan solusi di bawah ini. Klik Simpan untuk memperbarui grafik.
- Perubahan tersimpan online dan dibagikan ke perangkat lain. Ekspor JSON untuk membuat cadangan.
+ Perubahan disimpan di browser perangkat ini. Ekspor JSON untuk membuat cadangan.
  </p>
  <div class="formgrid" id="editFields"></div>
  <div class="editor-actions">
@@ -234,27 +464,21 @@ footer{margin-top:0;padding:28px 25px;color:white;
  </div>
 </footer>
 
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<div class="infographic-modal" id="infographicModal" aria-label="Pratinjau infografis" role="dialog" aria-modal="true">
+ <div class="infographic-actions">
+  <button class="btn primary" id="downloadPngBtn" onclick="downloadInfographicPNG()">⬇ SIMPAN FOTO PNG</button>
+  <button class="btn secondary" onclick="printInfographic()">▤ SIMPAN PDF</button>
+  <button class="btn secondary" onclick="closeInfographic()">✕ TUTUP</button>
+ </div>
+ <div class="infographic-preview" id="infographicPreview"></div>
+</div>
+
+
 <script>
 "use strict";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAR-dCoSD1yHPJOcrwNIq4CzXMur0RKUuM",
-  authDomain: "dashboard-kesehatan-jiwa.firebaseapp.com",
-  projectId: "dashboard-kesehatan-jiwa",
-  storageBucket: "dashboard-kesehatan-jiwa.firebasestorage.app",
-  messagingSenderId: "400003838850",
-  appId: "1:400003838850:web:d2ebabf382e5827f4c959b",
-  measurementId: "G-73N7GKMS4R"
-};
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const monthCollection = db.collection("dashboardMonths");
-
-
 const MONTHS=["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGS","SEP","OKTOBER","NOV","DES"];
-const STORAGE="epusbonat-keswa-v1"; // dipertahankan untuk kompatibilitas ekspor
+const STORAGE="epusbonat-keswa-v1";
 
 function freshData(){
  return {
@@ -281,58 +505,24 @@ let currentMonth="OKTOBER";
 let data=freshData();
 let isEditing=false;
 
-let unsubscribeMonth = null;
-let applyingRemote = false;
-
 function load(){
-  subscribeMonth(currentMonth);
+ try{
+  const raw=localStorage.getItem(STORAGE);
+  if(raw)allData=JSON.parse(raw);
+ }catch(e){console.warn("Data lokal tidak dapat dibaca",e)}
+ if(!allData[currentMonth])allData[currentMonth]=freshData();
+ data=allData[currentMonth];
 }
 
-function subscribeMonth(month){
-  if(unsubscribeMonth){ unsubscribeMonth(); unsubscribeMonth=null; }
-  document.getElementById("editStatus").textContent = "Menghubungkan ke database bersama…";
-  unsubscribeMonth = monthCollection.doc(month).onSnapshot(async snap => {
-    applyingRemote = true;
-    if(snap.exists){
-      data = snap.data().data || freshData();
-    } else {
-      data = freshData();
-      data.month = month;
-      try {
-        await monthCollection.doc(month).set({data, updatedAt: firebase.firestore.FieldValue.serverTimestamp()});
-      } catch(err) {
-        console.error(err);
-        document.getElementById("editStatus").textContent = "Gagal membuat data bulan: " + err.message;
-      }
-    }
-    allData[month] = data;
-    render();
-    if(isEditing) buildEditor();
-    document.getElementById("editStatus").textContent = "Terhubung · perubahan tersinkron otomatis.";
-    applyingRemote = false;
-  }, err => {
-    applyingRemote = false;
-    console.error("Firestore read error:", err);
-    document.getElementById("editStatus").textContent = "Gagal membaca database: " + err.message;
-    alert("Dashboard tidak dapat membaca database Firestore. Periksa Rules dan koneksi internet.\n" + err.message);
-  });
-}
-
-async function persist(){
-  allData[currentMonth] = data;
-  try {
-    await monthCollection.doc(currentMonth).set({
-      data: data,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    document.getElementById("editStatus").textContent = "Perubahan tersimpan online.";
-    return true;
-  } catch(e) {
-    console.error("Firestore write error:", e);
-    document.getElementById("editStatus").textContent = "Gagal menyimpan: " + e.message;
-    alert("Penyimpanan online gagal. Periksa aturan Firestore dan koneksi internet.\\n" + e.message);
-    return false;
-  }
+function persist(){
+ allData[currentMonth]=data;
+ try{
+  localStorage.setItem(STORAGE,JSON.stringify(allData));
+  return true;
+ }catch(e){
+  alert("Penyimpanan browser gagal. Ekspor data sebagai cadangan.");
+  return false;
+ }
 }
 function number(n){return Number(n||0).toLocaleString("id-ID")}
 function percent(a,b){return b?((a/b)*100).toLocaleString("id-ID",{minimumFractionDigits:2,maximumFractionDigits:2})+"%":"—"}
@@ -555,19 +745,18 @@ function saveEditor(){
  }catch(e){alert("Data belum disimpan: "+e.message)}
 }
 function selectMonth(month){
-  currentMonth=month;
-  data=allData[month] || freshData();
-  render();
-  subscribeMonth(month);
-  if(isEditing)buildEditor();
+ currentMonth=month;
+ if(!allData[month])allData[month]=freshData();
+ data=allData[month];
+ persist();
+ render();
+ if(isEditing)buildEditor();
 }
-async function resetMonth(){
-  if(!confirm("Kembalikan data bulan "+currentMonth+" ke data awal?"))return;
-  data=freshData();
-  data.month=currentMonth;
-  allData[currentMonth]=data;
-  const ok=await persist();
-  if(ok){render();buildEditor();}
+function resetMonth(){
+ if(!confirm("Kembalikan data bulan "+currentMonth+" ke data awal?"))return;
+ allData[currentMonth]=freshData();
+ data=allData[currentMonth];
+ persist();render();buildEditor();
 }
 function exportData(){
  const blob=new Blob([JSON.stringify({app:"E-PUSBONAT-Keswa",version:1,months:allData},null,2)],{type:"application/json"});
@@ -594,8 +783,72 @@ document.getElementById("importFile").addEventListener("change",async e=>{
  }catch(err){alert("Impor gagal: "+err.message)}
  e.target.value="";
 });
-render();
+
+function openInfographic(){
+ const preview=document.getElementById("infographicPreview");
+ const hero=document.querySelector("header.hero");
+ const dash=document.getElementById("dashboard");
+ const foot=document.querySelector("body>footer");
+ preview.innerHTML="";
+ if(hero)preview.appendChild(hero.cloneNode(true));
+ const main=document.createElement("main");
+ main.innerHTML=dash?dash.innerHTML:"";
+ preview.appendChild(main);
+ if(foot)preview.appendChild(foot.cloneNode(true));
+ document.getElementById("infographicModal").classList.add("open");
+ document.body.style.overflow="hidden";
+}
+function closeInfographic(){
+ document.getElementById("infographicModal").classList.remove("open");
+ document.body.style.overflow="";
+ document.body.classList.remove("infographic-print");
+}
+async function loadHtml2Canvas(){
+ if(window.html2canvas)return;
+ await new Promise((resolve,reject)=>{
+  const s=document.createElement("script");
+  s.src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+  s.onload=resolve;
+  s.onerror=()=>reject(new Error("Pustaka gambar tidak dapat dimuat. Periksa koneksi internet."));
+  document.head.appendChild(s);
+ });
+}
+async function downloadInfographicPNG(){
+ const btn=document.getElementById("downloadPngBtn");
+ const old=btn.textContent;
+ try{
+  btn.disabled=true;btn.textContent="Membuat foto PNG…";
+  await loadHtml2Canvas();
+  const node=document.getElementById("infographicPreview");
+  // Kanvas ekspor dirender pada lebar tetap; tetap nyaman dipratinjau dengan scroll di HP.
+  const priorWidth=node.style.width, priorMax=node.style.maxWidth, priorTransform=node.style.transform;
+  node.style.width="1200px";node.style.maxWidth="none";node.style.transform="none";
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  const canvas=await html2canvas(node,{
+    scale:4,backgroundColor:"#f1fbfc",useCORS:true,logging:false,
+    width:1200,windowWidth:1280,windowHeight:Math.max(1600,node.scrollHeight),
+    scrollX:0,scrollY:0
+  });
+  node.style.width=priorWidth;node.style.maxWidth=priorMax;node.style.transform=priorTransform;
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png"));
+  if(!blob)throw new Error("Gambar PNG tidak berhasil dibuat.");
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="Infografis-Keswa-"+(typeof currentMonth!=="undefined"?currentMonth:"Dashboard")+".png";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+ }catch(e){alert("Belum berhasil menyimpan PNG: "+e.message)}
+ finally{btn.disabled=false;btn.textContent=old}
+}
+function printInfographic(){
+ document.body.classList.add("infographic-print");
+ window.print();
+ setTimeout(()=>document.body.classList.remove("infographic-print"),800);
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeInfographic()});
+
 load();
+render();
 </script>
 </body>
 </html>
