@@ -609,56 +609,63 @@ function subscribeCurrentMonthRealtime(month){
   updateFirebaseStatus();
  });
 }
+function monthHasContent(value){
+ if(!value || !value.spm || !value.regions)return false;
+ const nums=[
+  value.spm.target,value.spm.achieved,
+  value.screening?.target,value.screening?.achieved,
+  value.bok?.target,value.bok?.achieved,
+  value.odgj?.total,value.odgj?.f20,value.odgj?.other,
+  value.odgj?.newMonth,value.odgj?.cumulative
+ ];
+ if(nums.some(v=>Number(v)>0))return true;
+ if(Array.isArray(value.regions) && value.regions.some(r=>Number(r.count)>0 || String(r.code||"").trim()))return true;
+ if(Array.isArray(value.challenges) && value.challenges.length)return true;
+ if(Array.isArray(value.solutions) && value.solutions.length)return true;
+ return false;
+}
 async function syncCurrentMonthFromFirebase(){
  if(!keswaDb) return;
  subscribeCurrentMonthRealtime(currentMonth);
  const requestedMonth=currentMonth;
  try{
-  const remote=await readMonthFromFirebase(requestedMonth);
-  if(remote){
-   allData[requestedMonth]=remote;
+  let destination=await readMonthFromFirebase(requestedMonth);
+  // Dokumen tujuan yang kosong dianggap belum memiliki data periode.
+  if(destination && monthHasContent(destination)){
+   allData[requestedMonth]=destination;
    try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
    if(currentMonth===requestedMonth && !isEditing){
-    data=allData[requestedMonth];
+    data=destination;
     render();
    }
    firebaseSyncMessage="Data "+requestedMonth+" tersinkron dari Firebase";
   }else{
-   // Bulan baru otomatis mewarisi salinan bulan kalender sebelumnya.
-   // Dokumen bulan lama tidak disentuh; salinan bulan baru dapat diedit mandiri.
    const monthIndex=MONTHS.indexOf(requestedMonth);
    const previousMonth=MONTHS[(monthIndex+MONTHS.length-1)%MONTHS.length];
    let previousData=null;
-   try{
-    previousData=await readMonthFromFirebase(previousMonth);
-   }catch(previousReadError){
-    console.warn("Tidak dapat membaca bulan sebelumnya dari Firebase:",previousReadError);
-   }
-   if(!previousData && allData[previousMonth]){
+   try{previousData=await readMonthFromFirebase(previousMonth);}catch(e){console.warn("Gagal membaca bulan sebelumnya:",e);}
+   if(!monthHasContent(previousData) && allData[previousMonth] && monthHasContent(allData[previousMonth])){
     previousData=JSON.parse(JSON.stringify(allData[previousMonth]));
    }
-   if(!allData[requestedMonth] || !allData[requestedMonth].spm || !allData[requestedMonth].regions){
-    const inherited=previousData
-      ? {...previousData,month:requestedMonth}
-      : emptyData(requestedMonth);
+   if(!monthHasContent(previousData)){
+    // Jangan menimpa data lokal yang mungkin sudah pernah diisi.
+    if(!allData[requestedMonth])allData[requestedMonth]=emptyData(requestedMonth);
+    data=allData[requestedMonth];
+    firebaseSyncMessage="Data "+previousMonth+" belum ditemukan; "+requestedMonth+" belum dapat disalin";
+   }else{
+    const inherited={...previousData,month:requestedMonth};
     allData[requestedMonth]=JSON.parse(JSON.stringify(inherited));
-   }
-   data=allData[requestedMonth];
-   try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
-   if(keswaDb && previousData){
+    data=allData[requestedMonth];
+    try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
     try{
      await saveMonthToFirebase(requestedMonth,data);
-     firebaseSyncMessage="Data "+requestedMonth+" disalin dari "+previousMonth+" dan tersimpan di Firebase · silakan edit sesuai kebutuhan";
+     firebaseSyncMessage="Data "+requestedMonth+" berhasil disalin dari "+previousMonth+" · silakan sesuaikan";
     }catch(copyError){
-     console.error("Gagal membuat salinan bulan baru:",copyError);
-     firebaseSyncMessage="Data "+requestedMonth+" disalin secara lokal dari "+previousMonth+"; sinkronisasi Firebase gagal";
+     console.error("Gagal menyimpan salinan periode:",copyError);
+     firebaseSyncMessage="Salinan "+requestedMonth+" tersedia di browser, tetapi gagal disimpan ke Firebase";
     }
-   }else if(previousData){
-    firebaseSyncMessage="Data "+requestedMonth+" disalin dari "+previousMonth+" · tersimpan di browser";
-   }else{
-    firebaseSyncMessage="Belum ada data "+previousMonth+" untuk disalin; "+requestedMonth+" dimulai dari template kosong";
+    if(currentMonth===requestedMonth && !isEditing)render();
    }
-   if(currentMonth===requestedMonth && !isEditing)render();
   }
   updateFirebaseStatus();
  }catch(e){
