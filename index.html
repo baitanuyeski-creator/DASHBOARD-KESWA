@@ -430,10 +430,8 @@ footer{margin-top:0;padding:28px 25px;color:white;
  <nav class="months" id="months" aria-label="Pilih bulan"></nav>
  <div class="actions">
   <button class="btn primary" onclick="toggleEditor()">✎ EDIT DASHBOARD</button>
-  <button class="btn secondary" onclick="exportData()">↓ EKSPOR JSON</button>
-  <button class="btn secondary" onclick="document.getElementById('importFile').click()">↑ IMPOR JSON</button>
   <button class="btn secondary" onclick="window.print()">▤ CETAK</button>
-  <button class="btn primary" onclick="openInfographic()">▧ INFOGRAFIS PNG 1 HALAMAN</button>
+  <button class="btn primary" onclick="openInfographic()">▧ LIHAT POSTER DASHBOARD</button>
   <input type="file" id="importFile" accept=".json,application/json" hidden>
  </div>
 </div>
@@ -443,7 +441,7 @@ footer{margin-top:0;padding:28px 25px;color:white;
  <h2>✎ Kelola Data Dashboard</h2>
  <p style="font-size:12px;line-height:1.7;color:#607c8b">
  Ubah angka, wilayah, kendala, dan solusi di bawah ini. Klik Simpan untuk memperbarui grafik.
- Perubahan disimpan ke Firebase dan cache browser jika koneksi tersedia. Ekspor JSON untuk cadangan.
+ Perubahan disimpan ke Firebase dan cache browser jika koneksi tersedia. Pastikan periode bulan yang dipilih sudah benar sebelum menyimpan.
  </p>
  <div class="formgrid" id="editFields"></div>
  <div class="editor-actions">
@@ -532,9 +530,9 @@ async function saveMonthToFirebase(month, value) {
 }
 
 
-function freshData(){
+function freshData(month="OKTOBER"){
  return {
-  month:"OKTOBER",
+  month:month,
   spm:{target:35,achieved:36},
   screening:{target:3259,achieved:5740},
   bok:{target:6,achieved:2},
@@ -552,8 +550,23 @@ function freshData(){
  };
 }
 
+// Bulan tanpa dokumen sendiri dimulai dari nol, tidak mewarisi data bulan lain.
+function emptyData(month){
+ const template=freshData(month);
+ return {
+  ...template,month,
+  spm:{target:0,achieved:0},
+  screening:{target:0,achieved:0},
+  bok:{target:0,achieved:0},
+  odgj:{total:0,f20:0,other:0,newMonth:0,cumulative:0},
+  regions:template.regions.map(r=>({...r,count:0,code:""})),
+  challenges:[],solutions:[]
+ };
+}
+
 let allData={};
-let currentMonth="OKTOBER";
+const currentCalendarMonth=MONTHS[new Date().getMonth()];
+let currentMonth=currentCalendarMonth;
 let data=freshData();
 let isEditing=false;
 
@@ -562,7 +575,7 @@ function load(){
   const raw=localStorage.getItem(STORAGE);
   if(raw)allData=JSON.parse(raw);
  }catch(e){console.warn("Data lokal tidak dapat dibaca",e)}
- if(!allData[currentMonth])allData[currentMonth]=freshData();
+ if(!allData[currentMonth])allData[currentMonth]=emptyData(currentMonth);
  data=allData[currentMonth];
  // Render segera dari cache, lalu sinkronkan dengan data Firebase.
  render();
@@ -576,13 +589,17 @@ function subscribeCurrentMonthRealtime(month){
   const doc=snap.data()||{};
   const remote=doc.data && typeof doc.data === "object" ? doc.data : doc;
   if(!remote.spm || !remote.regions) return;
-  const incoming={...freshData(),...remote,month};
+  const incoming={...emptyData(month),...remote,month};
   allData[month]=incoming;
   try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
   if(currentMonth===month){
-   data=incoming;
-   render();
-   if(isEditing) buildEditor();
+   if(!isEditing){
+    data=incoming;
+    render();
+   }else{
+    // Simpan hasil realtime tanpa menimpa isian editor yang belum disimpan.
+    data=incoming;
+   }
    firebaseSyncMessage="Realtime aktif · data "+month+" tersinkron";
    updateFirebaseStatus();
   }
@@ -601,10 +618,9 @@ async function syncCurrentMonthFromFirebase(){
   if(remote){
    allData[requestedMonth]=remote;
    try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
-   if(currentMonth===requestedMonth){
+   if(currentMonth===requestedMonth && !isEditing){
     data=allData[requestedMonth];
     render();
-    if(isEditing)buildEditor();
    }
    firebaseSyncMessage="Data "+requestedMonth+" tersinkron dari Firebase";
   }else{
@@ -872,16 +888,20 @@ function saveEditor(){
   if(persist()){
    render();
    buildEditor();
-   document.getElementById("editStatus").textContent="Perubahan berhasil disimpan pada browser ini.";
+   document.getElementById("editStatus").textContent="Perubahan tersimpan di browser. Status sinkronisasi Firebase terlihat di bagian bawah layar.";
   }
  }catch(e){alert("Data belum disimpan: "+e.message)}
 }
 async function selectMonth(month){
+ if(!MONTHS.includes(month))return;
  currentMonth=month;
- if(!allData[month])allData[month]=freshData();
+ if(activeMonthUnsubscribe){activeMonthUnsubscribe();activeMonthUnsubscribe=null;}
+ if(!allData[month])allData[month]=emptyData(month);
  data=allData[month];
  render();
  if(isEditing)buildEditor();
+ firebaseSyncMessage="Memuat data periode "+month+"…";
+ updateFirebaseStatus();
  await syncCurrentMonthFromFirebase();
 }
 function resetMonth(){
