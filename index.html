@@ -230,7 +230,41 @@ footer{margin-top:0;padding:28px 25px;color:white;
  body.infographic-print>*{display:none!important}
  body.infographic-print #infographicModal{display:block!important;position:static!important;overflow:visible!important;padding:0!important;background:#fff!important}
  body.infographic-print .infographic-actions{display:none!important}
- body.infographic-print .infographic-preview{width:100%!important;max-width:none!important;box-shadow:none!important;border-radius:0!important}
+ body.infographic-print .infographic-preview{width:100%!important;max-width:none!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important;background:#f1fbfc!important}
+ body.infographic-print #infographicPreview,
+ body.infographic-print #infographicPreview *{
+  -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;
+ }
+ body.infographic-print .infographic-preview .panel{
+  break-inside:avoid!important;page-break-inside:avoid!important;
+  box-shadow:none!important;
+ }
+ body.infographic-print .infographic-preview .chart{
+  height:245px!important;min-height:245px!important;overflow:visible!important;
+  break-inside:avoid!important;page-break-inside:avoid!important;
+ }
+ body.infographic-print .infographic-preview .chart-cols{
+  overflow:visible!important;min-height:205px!important;
+ }
+ body.infographic-print .infographic-preview .bar-col{
+  overflow:visible!important;min-width:0!important;
+ }
+ body.infographic-print .infographic-preview .bar-val{
+  white-space:normal!important;overflow-wrap:anywhere!important;
+  font-size:12px!important;line-height:1.2!important;text-align:center!important;
+ }
+ body.infographic-print .infographic-preview .x-label{
+  overflow:visible!important;white-space:normal!important;
+  overflow-wrap:anywhere!important;font-size:10px!important;line-height:1.25!important;
+ }
+ body.infographic-print .infographic-preview .metric strong{
+  font-size:20px!important;white-space:normal!important;overflow-wrap:anywhere!important;
+ }
+ body.infographic-print .infographic-preview .metric,
+ body.infographic-print .infographic-preview .region,
+ body.infographic-print .infographic-preview .info-row{
+  break-inside:avoid!important;page-break-inside:avoid!important;
+ }
  @page{size:A4 portrait;margin:8mm}
 }
 
@@ -465,7 +499,7 @@ footer{margin-top:0;padding:28px 25px;color:white;
 <div class="infographic-modal" id="infographicModal" aria-label="Pratinjau infografis" role="dialog" aria-modal="true">
  <div class="infographic-actions">
   <button class="btn primary" id="downloadPngBtn" onclick="downloadInfographicPNG()">⬇ SIMPAN FOTO PNG</button>
-  <button class="btn secondary" onclick="printInfographic()">▤ SIMPAN PDF</button>
+  <button class="btn primary" onclick="printInfographic()">▤ CETAK / SIMPAN PDF</button>
   <button class="btn secondary" onclick="closeInfographic()">✕ TUTUP</button>
  </div>
  <div class="infographic-preview" id="infographicPreview"></div>
