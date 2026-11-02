@@ -624,7 +624,41 @@ async function syncCurrentMonthFromFirebase(){
    }
    firebaseSyncMessage="Data "+requestedMonth+" tersinkron dari Firebase";
   }else{
-   firebaseSyncMessage="Dokumen "+requestedMonth+" belum ada di Firebase; data lokal dipertahankan";
+   // Bulan baru otomatis mewarisi salinan bulan kalender sebelumnya.
+   // Dokumen bulan lama tidak disentuh; salinan bulan baru dapat diedit mandiri.
+   const monthIndex=MONTHS.indexOf(requestedMonth);
+   const previousMonth=MONTHS[(monthIndex+MONTHS.length-1)%MONTHS.length];
+   let previousData=null;
+   try{
+    previousData=await readMonthFromFirebase(previousMonth);
+   }catch(previousReadError){
+    console.warn("Tidak dapat membaca bulan sebelumnya dari Firebase:",previousReadError);
+   }
+   if(!previousData && allData[previousMonth]){
+    previousData=JSON.parse(JSON.stringify(allData[previousMonth]));
+   }
+   if(!allData[requestedMonth] || !allData[requestedMonth].spm || !allData[requestedMonth].regions){
+    const inherited=previousData
+      ? {...previousData,month:requestedMonth}
+      : emptyData(requestedMonth);
+    allData[requestedMonth]=JSON.parse(JSON.stringify(inherited));
+   }
+   data=allData[requestedMonth];
+   try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
+   if(keswaDb && previousData){
+    try{
+     await saveMonthToFirebase(requestedMonth,data);
+     firebaseSyncMessage="Data "+requestedMonth+" disalin dari "+previousMonth+" dan tersimpan di Firebase · silakan edit sesuai kebutuhan";
+    }catch(copyError){
+     console.error("Gagal membuat salinan bulan baru:",copyError);
+     firebaseSyncMessage="Data "+requestedMonth+" disalin secara lokal dari "+previousMonth+"; sinkronisasi Firebase gagal";
+    }
+   }else if(previousData){
+    firebaseSyncMessage="Data "+requestedMonth+" disalin dari "+previousMonth+" · tersimpan di browser";
+   }else{
+    firebaseSyncMessage="Belum ada data "+previousMonth+" untuk disalin; "+requestedMonth+" dimulai dari template kosong";
+   }
+   if(currentMonth===requestedMonth && !isEditing)render();
   }
   updateFirebaseStatus();
  }catch(e){
