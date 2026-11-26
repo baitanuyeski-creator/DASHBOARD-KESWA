@@ -430,12 +430,9 @@ footer{margin-top:0;padding:28px 25px;color:white;
  <nav class="months" id="months" aria-label="Pilih bulan"></nav>
  <div class="actions">
   <button class="btn primary" onclick="toggleEditor()">✎ EDIT DASHBOARD</button>
-  <button class="btn secondary" onclick="exportData()">↓ EKSPOR JSON</button>
-  <button class="btn secondary" onclick="document.getElementById('importFile').click()">↑ IMPOR JSON</button>
   <button class="btn secondary" onclick="window.print()">▤ CETAK</button>
   <button class="btn primary" onclick="openInfographic()">▧ INFOGRAFIS PNG 1 HALAMAN</button>
   <button class="btn primary" id="exportPptBtn" onclick="exportPowerPoint()">▣ EXPORT POWERPOINT</button>
-  <input type="file" id="importFile" accept=".json,application/json" hidden>
  </div>
 </div>
 
@@ -444,7 +441,7 @@ footer{margin-top:0;padding:28px 25px;color:white;
  <h2>✎ Kelola Data Dashboard</h2>
  <p style="font-size:12px;line-height:1.7;color:#607c8b">
  Ubah angka, wilayah, kendala, dan solusi di bawah ini. Klik Simpan untuk memperbarui grafik.
- Perubahan disimpan ke Firebase dan cache browser jika koneksi tersedia. Ekspor JSON untuk cadangan.
+ Perubahan disimpan ke Firebase dan cache browser jika koneksi tersedia.
  </p>
  <div class="formgrid" id="editFields"></div>
  <div class="editor-actions">
@@ -891,32 +888,6 @@ function resetMonth(){
  data=allData[currentMonth];
  persist();render();buildEditor();
 }
-function exportData(){
- const blob=new Blob([JSON.stringify({app:"E-PUSBONAT-Keswa",version:1,months:allData},null,2)],{type:"application/json"});
- const url=URL.createObjectURL(blob);
- const a=document.createElement("a");
- a.href=url;a.download="E-PUSBONAT-Keswa-"+currentMonth+".json";
- a.click();URL.revokeObjectURL(url);
-}
-document.getElementById("importFile").addEventListener("change",async e=>{
- const file=e.target.files[0];if(!file)return;
- try{
-  const obj=JSON.parse(await file.text());
-  const imported=obj.months||obj;
-  if(!imported||typeof imported!=="object")throw Error("Format JSON tidak sesuai.");
-  if(!confirm("Impor data akan mengganti data bulan yang cocok. Lanjutkan?"))return;
-  for(const m of MONTHS){
-   if(imported[m]&&imported[m].spm&&imported[m].regions){
-    allData[m]=imported[m];
-   }
-  }
-  if(!allData[currentMonth])throw Error("Tidak ada data untuk bulan aktif.");
-  data=allData[currentMonth];
-  if(persist()){render();if(isEditing)buildEditor();alert("Impor berhasil.");}
- }catch(err){alert("Impor gagal: "+err.message)}
- e.target.value="";
-});
-
 function openInfographic(){
  const preview=document.getElementById("infographicPreview");
  const hero=document.querySelector("header.hero");
