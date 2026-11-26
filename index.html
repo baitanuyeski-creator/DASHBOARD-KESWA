@@ -180,287 +180,6 @@ footer{margin-top:0;padding:28px 25px;color:white;
  .toolbar,.actions,.editor{display:none!important}
  body{background:white}.panel{break-inside:avoid;box-shadow:none}
 }
-
-/* One-page phone-readable infographic export */
-.infographic-modal{display:none;position:fixed;inset:0;z-index:99999;overflow:auto;background:#062f40ee;padding:12px}
-.infographic-modal.open{display:block}
-.infographic-actions{position:sticky;top:0;z-index:3;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:8px;margin:0 auto 12px}
-.infographic-preview{width:min(100%,900px);margin:0 auto;background:#f1fbfc;box-shadow:0 18px 60px #001c2a66;border-radius:16px;overflow:hidden}
-.infographic-preview .hero{padding:22px 26px!important}
-.infographic-preview .hero-inner{max-width:none!important}
-.infographic-preview .logo{width:60px!important;height:60px!important;font-size:30px!important}
-.infographic-preview .hero h1{font-size:30px!important}
-.infographic-preview .hero h2{font-size:20px!important}
-.infographic-preview .toolbar{display:none!important}
-.infographic-preview main{max-width:none!important;padding:12px 14px 16px!important}
-.infographic-preview .grid3{grid-template-columns:1fr 1fr!important;gap:10px!important}
-.infographic-preview .grid3:first-child>.panel:last-child{grid-column:1/-1!important}
-.infographic-preview .grid3.lower{grid-template-columns:1fr!important}
-.infographic-preview .panel{break-inside:avoid;box-shadow:none!important}
-.infographic-preview .panel-head{min-height:58px!important;padding:10px!important}
-.infographic-preview .icon{width:42px!important;height:42px!important;font-size:20px!important}
-.infographic-preview .panel-head h3{font-size:17px!important}
-.infographic-preview .panel-body{padding:10px!important}
-.infographic-preview .chart{height:185px!important}
-.infographic-preview .bar-val{font-size:12px!important}
-.infographic-preview .x-label{font-size:10px!important}
-.infographic-preview .metric{padding:8px 3px!important}
-.infographic-preview .metric strong{font-size:18px!important}
-.infographic-preview .metric span{font-size:11px!important}
-.infographic-preview .regions{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-.infographic-preview .region-total{grid-column:1/-1!important;flex-direction:row!important}
-.infographic-preview .region h4{font-size:12px!important}
-.infographic-preview .region strong{font-size:25px!important}
-.infographic-preview footer{padding:16px 18px!important}
-.infographic-preview .footer-slogan{font-size:16px!important}
-.infographic-preview .footer-brand{text-align:right!important}
-@media(max-width:580px){
- .infographic-modal{padding:5px}
- .infographic-preview .hero{padding:16px 12px!important}
- .infographic-preview .hero h1{font-size:22px!important}
- .infographic-preview .hero h2{font-size:16px!important}
- .infographic-preview main{padding:8px!important}
- .infographic-preview .grid3{grid-template-columns:1fr!important}
- .infographic-preview .grid3:first-child>.panel:last-child{grid-column:auto!important}
- .infographic-preview .chart{height:190px!important}
- .infographic-preview .footer-inner{align-items:flex-start!important}
- .infographic-preview .footer-brand{text-align:left!important}
-}
-@media print{
- body.infographic-print>*{display:none!important}
- body.infographic-print #infographicModal{display:block!important;position:static!important;overflow:visible!important;padding:0!important;background:#fff!important}
- body.infographic-print .infographic-actions{display:none!important}
- body.infographic-print .infographic-preview{width:100%!important;max-width:none!important;box-shadow:none!important;border-radius:0!important;overflow:visible!important;background:#f1fbfc!important}
- body.infographic-print #infographicPreview,
- body.infographic-print #infographicPreview *{
-  -webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;
- }
- body.infographic-print .infographic-preview .panel{
-  break-inside:avoid!important;page-break-inside:avoid!important;
-  box-shadow:none!important;
- }
- body.infographic-print .infographic-preview .chart{
-  height:245px!important;min-height:245px!important;overflow:visible!important;
-  break-inside:avoid!important;page-break-inside:avoid!important;
- }
- body.infographic-print .infographic-preview .bar-print-svg{
-  display:block!important;flex:0 0 auto!important;max-width:52px!important;
-  min-width:8px!important;overflow:visible!important;
- }
- body.infographic-print .infographic-preview .bar{
-  display:none!important;
- }
- body.infographic-print .infographic-preview .panel-head{
-  border-bottom:2px solid #087e83!important;
- }
- body.infographic-print .infographic-preview .metric{
-  border:2px solid #087e83!important;
- }
- body.infographic-print .infographic-preview .m-yellow{border-color:#d69b00!important}
- body.infographic-print .infographic-preview .m-green{border-color:#239447!important}
- body.infographic-print .infographic-preview .m-blue{border-color:#147fe5!important}
- body.infographic-print .infographic-preview .m-red{border-color:#d91d39!important}
- body.infographic-print .infographic-preview .bar-val{color:#092e49!important}
- body.infographic-print .infographic-preview .chart-cols{
-  overflow:visible!important;min-height:205px!important;
- }
- body.infographic-print .infographic-preview .bar-col{
-  overflow:visible!important;min-width:0!important;
- }
- body.infographic-print .infographic-preview .bar-val{
-  white-space:normal!important;overflow-wrap:anywhere!important;
-  font-size:12px!important;line-height:1.2!important;text-align:center!important;
- }
- body.infographic-print .infographic-preview .x-label{
-  overflow:visible!important;white-space:normal!important;
-  overflow-wrap:anywhere!important;font-size:10px!important;line-height:1.25!important;
- }
- body.infographic-print .infographic-preview .metric strong{
-  font-size:20px!important;white-space:normal!important;overflow-wrap:anywhere!important;
- }
- body.infographic-print .infographic-preview .metric,
- body.infographic-print .infographic-preview .region,
- body.infographic-print .infographic-preview .info-row{
-  break-inside:avoid!important;page-break-inside:avoid!important;
- }
- @page{size:A4 portrait;margin:8mm}
-}
-
-
-/* OPTIMASI HP: dashboard tetap jelas, tidak melebar/terpotong */
-@media (max-width: 600px) {
-  html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
-  header.hero { padding: 17px 12px; }
-  .hero-inner { width: 100%; }
-  .brand { min-width: 0; align-items: center; gap: 10px; }
-  .brand > div:last-child { min-width: 0; }
-  .hero h1 { font-size: clamp(19px, 5.4vw, 25px); letter-spacing: -.45px; overflow-wrap: anywhere; }
-  .hero h2 { font-size: clamp(13px, 3.8vw, 17px); line-height: 1.15; }
-  .byline { font-size: 10px; line-height: 1.35; }
-  .logo { flex: 0 0 46px; width: 46px; height: 46px; font-size: 24px; }
-  .toolbar { padding: 9px 8px 0; }
-  .months { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; padding: 7px; }
-  .month { min-height: 36px; padding: 8px 2px; font-size: 11px; }
-  .actions { justify-content: stretch; gap: 6px; }
-  .actions .btn { flex: 1 1 calc(50% - 6px); min-width: 0; padding: 10px 7px; font-size: 11px; }
-  main { padding: 8px 8px 14px; }
-  .grid3 { grid-template-columns: minmax(0, 1fr) !important; gap: 10px; }
-  .grid3 > .panel:last-child { grid-column: auto !important; }
-  .panel { border-radius: 14px; }
-  .panel-head { min-height: 60px; gap: 9px; padding: 10px; }
-  .panel-head h3 { font-size: 16px; line-height: 1.2; }
-  .panel-body { padding: 9px; }
-  .chart { width: 100%; height: 210px; }
-  .metrics { gap: 4px; }
-  .metric { min-width: 0; padding: 8px 3px; }
-  .metric strong { font-size: clamp(15px, 4.5vw, 19px); }
-  .metric span { font-size: 10px; line-height: 1.2; overflow-wrap: anywhere; }
-  .regions { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
-  .region { min-width: 0; padding: 9px 5px; }
-  .region h4 { font-size: 11px; overflow-wrap: anywhere; }
-  .region strong { font-size: 22px; }
-  .region-total { grid-column: 1 / -1 !important; }
-  .footer-inner { gap: 10px; flex-direction: column; }
-  .footer-brand { text-align: left; }
-  .editor { margin: 8px; padding: 12px; }
-  .formgrid { grid-template-columns: minmax(0, 1fr) !important; }
-  input, select, textarea { max-width: 100%; }
-}
-/* Pratinjau/simpan PNG berbentuk infografis vertikal seperti referensi */
-.infographic-preview { width: min(100%, 980px); }
-.infographic-preview .grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-.infographic-preview .grid3:first-child > .panel:last-child { grid-column: auto !important; }
-.infographic-preview .grid3.lower { grid-template-columns: 1fr 1fr 1fr !important; }
-.infographic-preview .regions { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; }
-.infographic-preview .region-total { grid-column: auto !important; flex-direction: column !important; }
-@media (max-width: 600px) {
-  .infographic-modal { padding: 5px; }
-  .infographic-preview { width: 100%; border-radius: 10px; }
-  .infographic-preview .hero { padding: 14px 10px !important; }
-  .infographic-preview .hero-inner { align-items: center !important; }
-  .infographic-preview .logo { flex: 0 0 38px; width: 38px !important; height: 38px !important; font-size: 21px !important; }
-  .infographic-preview .hero h1 { font-size: 19px !important; }
-  .infographic-preview .hero h2 { font-size: 13px !important; }
-  .infographic-preview .byline { font-size: 9px !important; }
-  .infographic-preview main { padding: 6px !important; }
-  .infographic-preview .grid3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 5px !important; }
-  .infographic-preview .grid3.lower { grid-template-columns: 1fr 1fr 1fr !important; }
-  .infographic-preview .panel { border-radius: 9px !important; }
-  .infographic-preview .panel-head { display: block !important; min-height: 0 !important; padding: 6px 4px !important; }
-  .infographic-preview .icon { display: none !important; }
-  .infographic-preview .panel-head h3 { font-size: 10px !important; line-height: 1.1 !important; }
-  .infographic-preview .panel-body { padding: 4px !important; }
-  .infographic-preview .chart { height: 105px !important; }
-  .infographic-preview .bar-val { font-size: 8px !important; }
-  .infographic-preview .x-label { font-size: 7px !important; }
-  .infographic-preview .metric { padding: 4px 2px !important; }
-  .infographic-preview .metric strong { font-size: 10px !important; }
-  .infographic-preview .metric span { font-size: 7px !important; }
-  .infographic-preview .regions { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 4px !important; }
-  .infographic-preview .region-total { grid-column: 1 / -1 !important; flex-direction: row !important; }
-  .infographic-preview .region h4 { font-size: 8px !important; }
-  .infographic-preview .region strong { font-size: 15px !important; }
-  .infographic-preview footer { padding: 10px !important; }
-  .infographic-preview .footer-inner { flex-direction: row !important; }
-  .infographic-preview .footer-brand { text-align: right !important; }
-}
-
-
-/* INFOGRAFIS EXPORT: kanvas tetap lebar dan proporsional walau dibuka dari HP */
-.infographic-preview{
- width:1200px!important;max-width:none!important;margin:0 auto!important;
- font-size:16px!important;overflow:visible!important;
-}
-.infographic-preview .hero{padding:28px 34px!important}
-.infographic-preview .hero h1{font-size:38px!important;line-height:1.08!important}
-.infographic-preview .hero h2{font-size:25px!important}
-.infographic-preview .byline{font-size:15px!important}
-.infographic-preview main{padding:18px 22px 22px!important}
-.infographic-preview .grid3{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
-.infographic-preview .grid3:first-child>.panel:last-child{grid-column:auto!important}
-.infographic-preview .grid3.lower{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-.infographic-preview .panel-head{min-height:82px!important;padding:14px!important;gap:12px!important}
-.infographic-preview .panel-head h3{font-size:23px!important;line-height:1.15!important}
-.infographic-preview .icon{width:52px!important;height:52px!important;font-size:25px!important;display:flex!important}
-.infographic-preview .panel-body{padding:14px!important}
-.infographic-preview .chart{height:300px!important;min-height:300px!important}
-.infographic-preview .bar-val{font-size:17px!important}
-.infographic-preview .x-label{font-size:14px!important}
-.infographic-preview .metric{padding:12px 5px!important}
-.infographic-preview .metric strong{font-size:25px!important}
-.infographic-preview .metric span{font-size:14px!important;line-height:1.25!important}
-.infographic-preview .regions{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:8px!important}
-.infographic-preview .region-total{grid-column:auto!important;flex-direction:column!important}
-.infographic-preview .region{padding:14px 8px!important}
-.infographic-preview .region h4{font-size:15px!important}
-.infographic-preview .region strong{font-size:30px!important}
-.infographic-preview footer{padding:24px 28px!important}
-.infographic-preview .footer-slogan{font-size:22px!important}
-.infographic-preview .footer-brand{font-size:12px!important;text-align:right!important}
-.infographic-preview .item,.infographic-preview li{font-size:17px!important;line-height:1.35!important}
-@media(max-width:600px){
- .infographic-modal{overflow:auto!important}
- .infographic-preview{width:1200px!important;max-width:none!important}
-}
-
-
-/* FIX INFOGRAFIS WILAYAH: enam wilayah satu baris lurus, tanpa kartu menggantung */
-.infographic-preview .regions {
-  display: grid !important;
-  grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
-  gap: 6px !important;
-  align-items: stretch !important;
-}
-.infographic-preview .region {
-  min-width: 0 !important;
-  width: auto !important;
-  box-sizing: border-box !important;
-  padding: 10px 4px !important;
-  overflow-wrap: anywhere !important;
-}
-.infographic-preview .region h4 {
-  font-size: clamp(9px, 1.05vw, 13px) !important;
-  line-height: 1.15 !important;
-  white-space: normal !important;
-  overflow-wrap: anywhere !important;
-}
-.infographic-preview .region strong {
-  font-size: clamp(18px, 2vw, 27px) !important;
-  line-height: 1.1 !important;
-}
-.infographic-preview .region-total {
-  grid-column: auto !important;
-  min-width: 0 !important;
-}
-@media (max-width: 600px) {
-  /* PNG tetap satu baris horizontal; pengguna dapat memperbesar pratinjau di HP */
-  .infographic-preview .regions {
-    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
-    gap: 3px !important;
-  }
-  .infographic-preview .region {
-    padding: 7px 2px !important;
-    border-radius: 7px !important;
-  }
-  .infographic-preview .region h4 {
-    font-size: 8px !important;
-    line-height: 1.05 !important;
-  }
-  .infographic-preview .region strong {
-    font-size: 13px !important;
-  }
-  .infographic-preview .region small,
-  .infographic-preview .region p {
-    font-size: 7px !important;
-    line-height: 1.1 !important;
-  }
-  .infographic-preview .region-total {
-    grid-column: auto !important;
-    flex-direction: column !important;
-    align-items: center !important;
-  }
-}
-
 </style>
 </head>
 <body>
@@ -482,8 +201,9 @@ footer{margin-top:0;padding:28px 25px;color:white;
  <nav class="months" id="months" aria-label="Pilih bulan"></nav>
  <div class="actions">
   <button class="btn primary" onclick="toggleEditor()">✎ EDIT DASHBOARD</button>
+  <button class="btn secondary" onclick="exportData()">↓ EKSPOR JSON</button>
+  <button class="btn secondary" onclick="document.getElementById('importFile').click()">↑ IMPOR JSON</button>
   <button class="btn secondary" onclick="window.print()">▤ CETAK</button>
-  <button class="btn primary" onclick="openInfographic()">▧ LIHAT POSTER DASHBOARD</button>
   <input type="file" id="importFile" accept=".json,application/json" hidden>
  </div>
 </div>
@@ -493,7 +213,7 @@ footer{margin-top:0;padding:28px 25px;color:white;
  <h2>✎ Kelola Data Dashboard</h2>
  <p style="font-size:12px;line-height:1.7;color:#607c8b">
  Ubah angka, wilayah, kendala, dan solusi di bawah ini. Klik Simpan untuk memperbarui grafik.
- Perubahan disimpan ke Firebase dan cache browser jika koneksi tersedia. Pastikan periode bulan yang dipilih sudah benar sebelum menyimpan.
+ Perubahan disimpan di browser perangkat ini. Ekspor JSON untuk membuat cadangan.
  </p>
  <div class="formgrid" id="editFields"></div>
  <div class="editor-actions">
@@ -514,77 +234,15 @@ footer{margin-top:0;padding:28px 25px;color:white;
  </div>
 </footer>
 
-<div class="infographic-modal" id="infographicModal" aria-label="Pratinjau infografis" role="dialog" aria-modal="true">
- <div class="infographic-actions">
-  <button class="btn primary" id="downloadPngBtn" onclick="downloadInfographicPNG()">⬇ SIMPAN FOTO PNG</button>
-  <button class="btn primary" onclick="printInfographic()">▤ CETAK / SIMPAN PDF</button>
-  <button class="btn secondary" onclick="closeInfographic()">✕ TUTUP</button>
- </div>
- <div class="infographic-preview" id="infographicPreview"></div>
-</div>
-
-
-
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-
 <script>
 "use strict";
 
 const MONTHS=["JAN","FEB","MAR","APR","MEI","JUN","JUL","AGS","SEP","OKTOBER","NOV","DES"];
 const STORAGE="epusbonat-keswa-v1";
 
-// Firebase lama: DASHBOARD KESEHATAN JIWA
-const firebaseConfig = {
-  apiKey: "AIzaSyAR-dCoSD1yHPJOcrwNIq4CzXMur0RKUuM",
-  authDomain: "dashboard-kesehatan-jiwa.firebaseapp.com",
-  projectId: "dashboard-kesehatan-jiwa",
-  storageBucket: "dashboard-kesehatan-jiwa.firebasestorage.app",
-  messagingSenderId: "400003838850",
-  appId: "1:400003838850:web:d2ebabf382e5827f4c959b",
-  measurementId: "G-73N7GKMS4R"
-};
-let keswaDb = null;
-let firebaseReady = false;
-let firebaseSyncMessage = "Menghubungkan ke Firebase…";
-let activeMonthUnsubscribe = null;
-try {
-  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-  keswaDb = firebase.firestore();
-  firebaseReady = true;
-  firebaseSyncMessage = "Firebase terhubung";
-} catch (err) {
-  console.error("Firebase belum dapat diinisialisasi:", err);
-  firebaseSyncMessage = "Firebase belum terhubung; perubahan hanya tersimpan lokal";
-}
-
-function monthDocId(month) {
-  // Samakan dengan ID dokumen yang sudah ada di dashboardMonths, misalnya OKTOBER.
-  return String(month).toUpperCase();
-}
-async function readMonthFromFirebase(month) {
-  if (!keswaDb) return null;
-  const snap = await keswaDb.collection("dashboardMonths").doc(monthDocId(month)).get();
-  if (!snap.exists) return null;
-  const doc = snap.data() || {};
-  // Skema yang ada di Firestore: { month: "AGS", data: { spm, screening, bok, ... } }
-  const remote = doc.data && typeof doc.data === "object" ? doc.data : doc;
-  if (!remote.spm || !remote.regions) return null;
-  return {...freshData(), ...remote, month};
-}
-async function saveMonthToFirebase(month, value) {
-  if (!keswaDb) throw new Error("Firebase belum siap.");
-  await keswaDb.collection("dashboardMonths").doc(monthDocId(month)).set({
-    month: month,
-    data: JSON.parse(JSON.stringify(value)),
-    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-  }, {merge: true});
-}
-
-
-function freshData(month="OKTOBER"){
+function freshData(){
  return {
-  month:month,
+  month:"OKTOBER",
   spm:{target:35,achieved:36},
   screening:{target:3259,achieved:5740},
   bok:{target:6,achieved:2},
@@ -602,23 +260,8 @@ function freshData(month="OKTOBER"){
  };
 }
 
-// Bulan tanpa dokumen sendiri dimulai dari nol, tidak mewarisi data bulan lain.
-function emptyData(month){
- const template=freshData(month);
- return {
-  ...template,month,
-  spm:{target:0,achieved:0},
-  screening:{target:0,achieved:0},
-  bok:{target:0,achieved:0},
-  odgj:{total:0,f20:0,other:0,newMonth:0,cumulative:0},
-  regions:template.regions.map(r=>({...r,count:0,code:""})),
-  challenges:[],solutions:[]
- };
-}
-
 let allData={};
-const currentCalendarMonth=MONTHS[new Date().getMonth()];
-let currentMonth=currentCalendarMonth;
+let currentMonth="OKTOBER";
 let data=freshData();
 let isEditing=false;
 
@@ -627,143 +270,19 @@ function load(){
   const raw=localStorage.getItem(STORAGE);
   if(raw)allData=JSON.parse(raw);
  }catch(e){console.warn("Data lokal tidak dapat dibaca",e)}
- if(!allData[currentMonth])allData[currentMonth]=emptyData(currentMonth);
+ if(!allData[currentMonth])allData[currentMonth]=freshData();
  data=allData[currentMonth];
- // Render segera dari cache, lalu sinkronkan dengan data Firebase.
- render();
- syncCurrentMonthFromFirebase();
 }
-function subscribeCurrentMonthRealtime(month){
- if(activeMonthUnsubscribe){ activeMonthUnsubscribe(); activeMonthUnsubscribe=null; }
- if(!keswaDb) return;
- activeMonthUnsubscribe=keswaDb.collection("dashboardMonths").doc(monthDocId(month)).onSnapshot(snap=>{
-  if(!snap.exists) return;
-  const doc=snap.data()||{};
-  const remote=doc.data && typeof doc.data === "object" ? doc.data : doc;
-  if(!remote.spm || !remote.regions) return;
-  const incoming={...emptyData(month),...remote,month};
-  allData[month]=incoming;
-  try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
-  if(currentMonth===month){
-   if(!isEditing){
-    data=incoming;
-    render();
-   }else{
-    // Simpan hasil realtime tanpa menimpa isian editor yang belum disimpan.
-    data=incoming;
-   }
-   firebaseSyncMessage="Realtime aktif · data "+month+" tersinkron";
-   updateFirebaseStatus();
-  }
- },err=>{
-  console.error("Realtime Firestore error:",err);
-  firebaseSyncMessage="Realtime Firebase gagal; periksa koneksi dan Rules";
-  updateFirebaseStatus();
- });
-}
-function monthHasContent(value){
- if(!value || !value.spm || !value.regions)return false;
- const nums=[
-  value.spm.target,value.spm.achieved,
-  value.screening?.target,value.screening?.achieved,
-  value.bok?.target,value.bok?.achieved,
-  value.odgj?.total,value.odgj?.f20,value.odgj?.other,
-  value.odgj?.newMonth,value.odgj?.cumulative
- ];
- if(nums.some(v=>Number(v)>0))return true;
- if(Array.isArray(value.regions) && value.regions.some(r=>Number(r.count)>0 || String(r.code||"").trim()))return true;
- if(Array.isArray(value.challenges) && value.challenges.length)return true;
- if(Array.isArray(value.solutions) && value.solutions.length)return true;
- return false;
-}
-async function syncCurrentMonthFromFirebase(){
- if(!keswaDb) return;
- subscribeCurrentMonthRealtime(currentMonth);
- const requestedMonth=currentMonth;
- try{
-  let destination=await readMonthFromFirebase(requestedMonth);
-  // Dokumen tujuan yang kosong dianggap belum memiliki data periode.
-  if(destination && monthHasContent(destination)){
-   allData[requestedMonth]=destination;
-   try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
-   if(currentMonth===requestedMonth && !isEditing){
-    data=destination;
-    render();
-   }
-   firebaseSyncMessage="Data "+requestedMonth+" tersinkron dari Firebase";
-  }else{
-   const monthIndex=MONTHS.indexOf(requestedMonth);
-   const previousMonth=MONTHS[(monthIndex+MONTHS.length-1)%MONTHS.length];
-   let previousData=null;
-   try{previousData=await readMonthFromFirebase(previousMonth);}catch(e){console.warn("Gagal membaca bulan sebelumnya:",e);}
-   if(!monthHasContent(previousData) && allData[previousMonth] && monthHasContent(allData[previousMonth])){
-    previousData=JSON.parse(JSON.stringify(allData[previousMonth]));
-   }
-   if(!monthHasContent(previousData)){
-    // Jangan menimpa data lokal yang mungkin sudah pernah diisi.
-    if(!allData[requestedMonth])allData[requestedMonth]=emptyData(requestedMonth);
-    data=allData[requestedMonth];
-    firebaseSyncMessage="Data "+previousMonth+" belum ditemukan; "+requestedMonth+" belum dapat disalin";
-   }else{
-    const inherited={...previousData,month:requestedMonth};
-    allData[requestedMonth]=JSON.parse(JSON.stringify(inherited));
-    data=allData[requestedMonth];
-    try{localStorage.setItem(STORAGE,JSON.stringify(allData));}catch(e){}
-    try{
-     await saveMonthToFirebase(requestedMonth,data);
-     firebaseSyncMessage="Data "+requestedMonth+" berhasil disalin dari "+previousMonth+" · silakan sesuaikan";
-    }catch(copyError){
-     console.error("Gagal menyimpan salinan periode:",copyError);
-     firebaseSyncMessage="Salinan "+requestedMonth+" tersedia di browser, tetapi gagal disimpan ke Firebase";
-    }
-    if(currentMonth===requestedMonth && !isEditing)render();
-   }
-  }
-  updateFirebaseStatus();
- }catch(e){
-  console.error("Gagal membaca Firestore:",e);
-  firebaseSyncMessage="Gagal membaca Firebase; data lokal tetap tersedia";
-  updateFirebaseStatus();
- }
-}
+
 function persist(){
  allData[currentMonth]=data;
  try{
   localStorage.setItem(STORAGE,JSON.stringify(allData));
+  return true;
  }catch(e){
   alert("Penyimpanan browser gagal. Ekspor data sebagai cadangan.");
   return false;
  }
- // Simpan ke Firebase secara asynchronous; status diperbarui setelah hasil nyata diterima.
- if(keswaDb){
-  const monthToSave=currentMonth;
-  const dataToSave=JSON.parse(JSON.stringify(data));
-  firebaseSyncMessage="Menyimpan "+monthToSave+" ke Firebase…";
-  updateFirebaseStatus();
-  saveMonthToFirebase(monthToSave,dataToSave).then(()=>{
-   firebaseSyncMessage="Tersimpan di Firebase · "+monthToSave;
-   updateFirebaseStatus();
-  }).catch(err=>{
-   console.error("Gagal menyimpan ke Firestore:",err);
-   firebaseSyncMessage="Gagal menyimpan ke Firebase; data lokal tersimpan";
-   updateFirebaseStatus();
-   alert("Data tersimpan di browser, tetapi gagal disimpan ke Firebase. Periksa koneksi dan Rules Firestore.");
-  });
- }else{
-  firebaseSyncMessage="Firebase belum terhubung; data hanya tersimpan lokal";
-  updateFirebaseStatus();
- }
- return true;
-}
-function updateFirebaseStatus(){
- let el=document.getElementById("firebaseSyncStatus");
- if(!el){
-  el=document.createElement("div");
-  el.id="firebaseSyncStatus";
-  el.style.cssText="position:fixed;right:10px;bottom:10px;z-index:1000;max-width:90vw;padding:7px 10px;border-radius:9px;background:#073f4b;color:#fff;font:12px/1.4 system-ui;box-shadow:0 3px 12px #0002";
-  document.body.appendChild(el);
- }
- el.textContent=firebaseSyncMessage;
 }
 function number(n){return Number(n||0).toLocaleString("id-ID")}
 function percent(a,b){return b?((a/b)*100).toLocaleString("id-ID",{minimumFractionDigits:2,maximumFractionDigits:2})+"%":"—"}
@@ -981,21 +500,17 @@ function saveEditor(){
   if(persist()){
    render();
    buildEditor();
-   document.getElementById("editStatus").textContent="Perubahan tersimpan di browser. Status sinkronisasi Firebase terlihat di bagian bawah layar.";
+   document.getElementById("editStatus").textContent="Perubahan berhasil disimpan pada browser ini.";
   }
  }catch(e){alert("Data belum disimpan: "+e.message)}
 }
-async function selectMonth(month){
- if(!MONTHS.includes(month))return;
+function selectMonth(month){
  currentMonth=month;
- if(activeMonthUnsubscribe){activeMonthUnsubscribe();activeMonthUnsubscribe=null;}
- if(!allData[month])allData[month]=emptyData(month);
+ if(!allData[month])allData[month]=freshData();
  data=allData[month];
+ persist();
  render();
  if(isEditing)buildEditor();
- firebaseSyncMessage="Memuat data periode "+month+"…";
- updateFirebaseStatus();
- await syncCurrentMonthFromFirebase();
 }
 function resetMonth(){
  if(!confirm("Kembalikan data bulan "+currentMonth+" ke data awal?"))return;
@@ -1028,106 +543,8 @@ document.getElementById("importFile").addEventListener("change",async e=>{
  }catch(err){alert("Impor gagal: "+err.message)}
  e.target.value="";
 });
-
-function openInfographic(){
- const preview=document.getElementById("infographicPreview");
- const hero=document.querySelector("header.hero");
- const dash=document.getElementById("dashboard");
- const foot=document.querySelector("body>footer");
- preview.innerHTML="";
- if(hero)preview.appendChild(hero.cloneNode(true));
- const main=document.createElement("main");
- main.innerHTML=dash?dash.innerHTML:"";
- preview.appendChild(main);
- if(foot)preview.appendChild(foot.cloneNode(true));
- document.getElementById("infographicModal").classList.add("open");
- document.body.style.overflow="hidden";
-}
-function closeInfographic(){
- document.getElementById("infographicModal").classList.remove("open");
- document.body.style.overflow="";
- document.body.classList.remove("infographic-print");
-}
-async function loadHtml2Canvas(){
- if(window.html2canvas)return;
- await new Promise((resolve,reject)=>{
-  const s=document.createElement("script");
-  s.src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-  s.onload=resolve;
-  s.onerror=()=>reject(new Error("Pustaka gambar tidak dapat dimuat. Periksa koneksi internet."));
-  document.head.appendChild(s);
- });
-}
-async function downloadInfographicPNG(){
- const btn=document.getElementById("downloadPngBtn");
- const old=btn.textContent;
- try{
-  btn.disabled=true;btn.textContent="Membuat foto PNG…";
-  await loadHtml2Canvas();
-  const node=document.getElementById("infographicPreview");
-  // Kanvas ekspor dirender pada lebar tetap; tetap nyaman dipratinjau dengan scroll di HP.
-  const priorWidth=node.style.width, priorMax=node.style.maxWidth, priorTransform=node.style.transform;
-  node.style.width="1200px";node.style.maxWidth="none";node.style.transform="none";
-  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-  const canvas=await html2canvas(node,{
-    scale:4,backgroundColor:"#f1fbfc",useCORS:true,logging:false,
-    width:1200,windowWidth:1280,windowHeight:Math.max(1600,node.scrollHeight),
-    scrollX:0,scrollY:0
-  });
-  node.style.width=priorWidth;node.style.maxWidth=priorMax;node.style.transform=priorTransform;
-  const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/png"));
-  if(!blob)throw new Error("Gambar PNG tidak berhasil dibuat.");
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;a.download="Infografis-Keswa-"+(typeof currentMonth!=="undefined"?currentMonth:"Dashboard")+".png";
-  document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1500);
- }catch(e){alert("Belum berhasil menyimpan PNG: "+e.message)}
- finally{btn.disabled=false;btn.textContent=old}
-}
-function printInfographic(){
- const preview=document.getElementById("infographicPreview");
- const replaced=[];
- // Ubah batang CSS menjadi SVG berisi fill eksplisit. SVG tetap berwarna
- // pada Firefox meskipun opsi cetak background tidak diaktifkan.
- preview.querySelectorAll(".bar").forEach((bar,index)=>{
-  const rect=bar.getBoundingClientRect();
-  const width=Math.max(8,Math.round(rect.width));
-  const height=Math.max(3,Math.round(rect.height));
-  const cls=bar.classList;
-  let fill="#1477e5";
-  if(cls.contains("yellow"))fill="#ffbf24";
-  else if(cls.contains("green"))fill="#37ae40";
-  else if(cls.contains("red"))fill="#d91d39";
-  else if(cls.contains("blue"))fill="#1477e5";
-  const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
-  svg.setAttribute("class","bar-print-svg");
-  svg.setAttribute("width",String(width));
-  svg.setAttribute("height",String(height));
-  svg.setAttribute("viewBox","0 0 "+width+" "+height);
-  svg.setAttribute("aria-label","Batang grafik berwarna");
-  const shape=document.createElementNS("http://www.w3.org/2000/svg","rect");
-  shape.setAttribute("x","0");shape.setAttribute("y","0");
-  shape.setAttribute("width",String(width));shape.setAttribute("height",String(height));
-  shape.setAttribute("rx","4");shape.setAttribute("fill",fill);
-  svg.appendChild(shape);
-  replaced.push({svg,bar});
-  bar.replaceWith(svg);
- });
- document.body.classList.add("infographic-print");
- const restore=()=>{
-  replaced.forEach(item=>{if(item.svg.isConnected)item.svg.replaceWith(item.bar);});
-  document.body.classList.remove("infographic-print");
-  window.removeEventListener("afterprint",restore);
- };
- window.addEventListener("afterprint",restore,{once:true});
- window.print();
- setTimeout(restore,2500);
-}
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeInfographic()});
-
 load();
-updateFirebaseStatus();
+render();
 </script>
 </body>
 </html>
