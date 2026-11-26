@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/35454448/README.md)
+[Uploading README.md…]()
 # Dashboard Kesehatan Jiwa --- Puskesmas Naibonat
 
 Dashboard pemantauan program Kesehatan Jiwa (Keswa) untuk Puskesmas
@@ -10,8 +10,8 @@ JavaScript agar dapat dijalankan melalui GitHub Pages.
 -   Dashboard ringkasan SPM Pelayanan ODGJ, Skrining Jiwa, dan Giat BOK.
 -   Filter/pilihan bulan.
 -   Informasi jumlah ODGJ dan sebaran berdasarkan wilayah.
--   Pengelolaan data pada browser, termasuk fitur edit serta
-    impor/ekspor JSON yang tersedia di aplikasi.
+-   Pengelolaan data pada browser, termasuk fitur edit yang tersedia di
+    aplikasi.
 -   Infografis satu halaman dengan opsi ekspor PNG resolusi tinggi dan
     opsi cetak/simpan PDF, jika fitur tersebut tersedia pada versi
     `index.html` yang dipasang.
